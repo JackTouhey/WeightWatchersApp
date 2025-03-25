@@ -5,12 +5,17 @@ public class Day {
     private int breakfastPoints;
     private int lunchPoints;
     private int dinnerPoints;
-    private int otherPoints;
+    private int otherPoints = 0;
+    private String name;
 
     public Day(){
-        this.otherPoints = 0;
     }
-
+    public Day(String name){
+        this.name = name;
+    }
+    public String getName(){
+        return this.name;
+    }
     public void setBreakfastPoints(int breakfastPoints) {
         this.breakfastPoints = breakfastPoints;
     }

@@ -8,11 +8,10 @@ public class Week {
     private Day friday;
     private Day saturday;
     private Day sunday;
-    private int weeklyPoints;
+    private int weeklyPoints = 40;
     private final int dailyLimit = 28;
     public Week(){
-        monday = new Day();
-        weeklyPoints = 40;
+        monday = new Day("Monday");
     }
     public Day getCurrentDay(){
         if(sunday != null){
@@ -34,17 +33,17 @@ public class Week {
     public void createNextDay(){
         Day currentDay = getCurrentDay();
         if(currentDay == monday){
-            tuesday = new Day();
+            tuesday = new Day("Tuesday");
         }else if(currentDay == tuesday){
-            wednesday = new Day();
+            wednesday = new Day("Wednesday");
         }else if(currentDay == wednesday){
-            thursday = new Day();
+            thursday = new Day("Thursday");
         }else if(currentDay == thursday){
-            friday = new Day();
+            friday = new Day("Friday");
         }else if(currentDay == friday){
-            saturday = new Day();
+            saturday = new Day("Saturday");
         }else if(currentDay == saturday){
-            sunday = new Day();
+            sunday = new Day("Sunday");
         }
     }
     public void completeDay(){
