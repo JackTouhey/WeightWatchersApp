@@ -15,6 +15,15 @@ public class Controller {
         currentWeek = new Week();
         currentDay = currentWeek.getCurrentDay();
     }
+    public ArrayList<Week> getHistory(){
+        return this.history;
+    }
+    public Day getCurrentDay(){
+        return this.currentDay;
+    }
+    public Week getCurrentWeek() {
+        return currentWeek;
+    }
 
     public void nextDay(){
         currentWeek.completeDay();

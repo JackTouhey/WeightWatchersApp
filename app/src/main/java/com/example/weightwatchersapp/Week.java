@@ -1,6 +1,11 @@
 package com.example.weightwatchersapp;
 
-public class Week {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+public class Week implements Parcelable {
     private Day monday;
     private Day tuesday;
     private Day wednesday;
@@ -9,10 +14,35 @@ public class Week {
     private Day saturday;
     private Day sunday;
     private int weeklyPoints = 40;
-    private final int dailyLimit = 28;
+    private int dailyLimit = 28;
     public Week(){
         monday = new Day("Monday");
     }
+
+    protected Week(Parcel in) {
+        monday = in.readParcelable(Day.class.getClassLoader());
+        tuesday = in.readParcelable(Day.class.getClassLoader());
+        wednesday = in.readParcelable(Day.class.getClassLoader());
+        thursday = in.readParcelable(Day.class.getClassLoader());
+        friday = in.readParcelable(Day.class.getClassLoader());
+        saturday = in.readParcelable(Day.class.getClassLoader());
+        sunday = in.readParcelable(Day.class.getClassLoader());
+        weeklyPoints = in.readInt();
+        dailyLimit = in.readInt();
+    }
+
+    public static final Creator<Week> CREATOR = new Creator<Week>() {
+        @Override
+        public Week createFromParcel(Parcel in) {
+            return new Week(in);
+        }
+
+        @Override
+        public Week[] newArray(int size) {
+            return new Week[size];
+        }
+    };
+
     public Day getCurrentDay(){
         if(sunday != null){
             return sunday;
@@ -56,5 +86,23 @@ public class Week {
             weeklyPoints += dayPointDifference;
         }
         createNextDay();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeParcelable(monday, flags);
+        dest.writeParcelable(tuesday, flags);
+        dest.writeParcelable(wednesday, flags);
+        dest.writeParcelable(thursday, flags);
+        dest.writeParcelable(friday, flags);
+        dest.writeParcelable(saturday, flags);
+        dest.writeParcelable(sunday, flags);
+        dest.writeInt(weeklyPoints);
+        dest.writeInt(dailyLimit);
     }
 }
