@@ -11,10 +11,8 @@ public class Day implements Parcelable {
     private int lunchPoints;
     private int dinnerPoints;
     private int otherPoints = 0;
-    private String name;
+    private final String name;
 
-    public Day(){
-    }
     public Day(String name){
         this.name = name;
     }

@@ -15,6 +15,12 @@ public class Controller {
         currentWeek = new Week();
         currentDay = currentWeek.getCurrentDay();
     }
+    public Controller(Activity activity, Day currentDay, Week currentWeek, ArrayList<Week> history){
+        this.activity = activity;
+        this.currentDay = currentDay;
+        this.currentWeek = currentWeek;
+        this.history = history;
+    }
     public ArrayList<Week> getHistory(){
         return this.history;
     }
