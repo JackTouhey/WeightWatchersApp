@@ -3,12 +3,22 @@ package com.example.weightwatchersapp;
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class Controller {
     Activity activity;
     private ArrayList<Week> history = new ArrayList<Week>();
     private Day currentDay;
     private Week currentWeek;
+    TextView breakfastPointsDisplay;
+    TextView lunchPointsDisplay;
+    TextView dinnerPointsDisplay;
+    TextView otherPointsDisplay;
+    EditText breakfastPointsInput;
+    EditText lunchPointsInput;
+    EditText dinnerPointsInput;
+    EditText otherPointsInput;
 
     public Controller(Activity activity){
         this.activity = activity;
