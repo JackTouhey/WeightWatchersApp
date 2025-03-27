@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">WeightWatchersApp</string>
-    <string name="day_view">Day View:</string>
+    <string name="day_view">Current Day:</string>
     <string name="breakfast_points">Breakfast Points:</string>
     <string name="lunch_points">Lunch Points:</string>
     <string name="dinner_points">Dinner Points:</string>
     <string name="other_points">Other Points:</string>
     <string name="not_set">Not entered</string>
+    <string name="submit_day">Submit Day</string>
+    <string name="remaining_points">Remaining Points:</string>
+    <string name="placeholder">placeholder</string>
 </resources>
