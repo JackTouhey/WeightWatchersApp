@@ -74,15 +74,57 @@ public class Controller {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
                     try{
                         currentDay.setBreakfastPoints(Integer.parseInt(breakfastPointsInput.getText().toString()));
+                        breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                     } catch (NumberFormatException nfe){
-                        Log.d("BREAKFASTPOINTINPUT", "NFE on setting current day breakfast points");
+                        Log.d("POINTINPUTERROR", "NFE on setting current day breakfast points" + nfe);
                     }
-                    breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                     return true;
                 }
                 return false;
             }
         });
-
+        lunchPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    try{
+                        currentDay.setLunchPoints(Integer.parseInt(lunchPointsInput.getText().toString()));
+                        lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+                    } catch (NumberFormatException nfe){
+                        Log.d("POINTINPUTERROR", "NFE on setting current day lunch points" + nfe);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        dinnerPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    try{
+                        currentDay.setDinnerPoints(Integer.parseInt(dinnerPointsInput.getText().toString()));
+                        dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+                    } catch (NumberFormatException nfe){
+                        Log.d("POINTINPUTERROR", "NFE on setting current day dinner points" + nfe);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        otherPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    try{
+                        currentDay.addOtherPoints(Integer.parseInt(otherPointsInput.getText().toString()));
+                        otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+                    } catch (NumberFormatException nfe){
+                        Log.d("POINTINPUTERROR", "NFE on setting current day other points" + nfe);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }
