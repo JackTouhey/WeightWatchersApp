@@ -100,7 +100,6 @@ public class Controller {
         currentDayDisplay.setText(currentDay.getName());
         dailyRemainingPointsDisplay.setText(String.valueOf(currentDay.getRemainingPoints()));
         weeklyRemainingPointsDisplay.setText(String.valueOf(currentWeek.getWeeklyPoints()));
-
     }
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);
