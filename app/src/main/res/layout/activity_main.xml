@@ -231,4 +231,14 @@
         android:layout_marginTop="423dp"
         android:text="@string/add_beer" />
 
+    <Button
+        android:id="@+id/addAllButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="265dp"
+        android:layout_marginTop="258dp"
+        android:text="@string/add_all" />
+
 </RelativeLayout>

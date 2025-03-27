@@ -12,4 +12,5 @@
     <string name="daily_points">Daily:</string>
     <string name="weekly_points">Weekly:</string>
     <string name="add_beer">Add Beer</string>
+    <string name="add_all">Add All</string>
 </resources>
