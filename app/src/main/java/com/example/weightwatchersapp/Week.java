@@ -60,7 +60,7 @@ public class Week implements Parcelable {
             return monday;
         }
     }
-    public void createNextDay(){
+    private void createNextDay(){
         Day currentDay = getCurrentDay();
         if(currentDay == monday){
             tuesday = new Day("Tuesday");
