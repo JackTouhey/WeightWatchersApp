@@ -212,7 +212,7 @@
         android:text="@string/placeholder" />
 
     <TextView
-        android:id="@+id/remainingWeeklyPointsDisplay"
+        android:id="@+id/remainingWeeklyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -220,5 +220,15 @@
         android:layout_marginStart="55dp"
         android:layout_marginTop="391dp"
         android:text="@string/weekly_points" />
+
+    <Button
+        android:id="@+id/addBeerButton"
+        android:layout_width="149dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="423dp"
+        android:text="@string/add_beer" />
 
 </RelativeLayout>

@@ -26,6 +26,7 @@ public class Controller {
     EditText dinnerPointsInput;
     EditText otherPointsInput;
     Button submitDay;
+    Button addBeer;
     private final String notEntered = "Not Entered";
 
     public Controller(Activity activity){
@@ -106,6 +107,7 @@ public class Controller {
         dinnerPointsInput = this.activity.findViewById(R.id.dinnerPointInput);
         otherPointsInput = this.activity.findViewById(R.id.otherPointInput);
         submitDay = this.activity.findViewById(R.id.submitDayButton);
+        addBeer = this.activity.findViewById(R.id.addBeerButton);
 
         breakfastPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event){
@@ -175,9 +177,19 @@ public class Controller {
         submitDay.setOnClickListener(e->{
             onSubmitDayPress();
         });
+        addBeer.setOnClickListener(e->{
+            onAddBeerClick();
+        });
     }
     private void onSubmitDayPress(){
         nextDay();
         updateDisplayValues();
+    }
+    private void onAddBeerClick(){
+        currentDay.addBeer();
+        updateDisplayValues();
+        if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 8) + 4)){
+            //Insult
+        }
     }
 }
