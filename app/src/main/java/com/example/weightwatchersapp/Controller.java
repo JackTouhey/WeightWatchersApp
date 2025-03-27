@@ -62,6 +62,18 @@ public class Controller {
         dinnerPointsDisplay = this.activity.findViewById(R.id.dinnerPointDisplay);
         otherPointsDisplay = this.activity.findViewById(R.id.otherPointDisplay);
         setupDayViewButtons();
+        if(currentDay.hasBreakfastPoints()){
+            breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
+        }
+        if(currentDay.hasLunchPoints()){
+            lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+        }
+        if(currentDay.hasDinnerPoints()){
+            dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+        }
+        if(currentDay.hasOtherPoints()){
+            otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+        }
     }
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);

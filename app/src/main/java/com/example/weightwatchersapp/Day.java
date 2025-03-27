@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 
 public class Day implements Parcelable {
 
-    private int breakfastPoints;
-    private int lunchPoints;
-    private int dinnerPoints;
-    private int otherPoints = 0;
+    private Integer breakfastPoints;
+    private Integer lunchPoints;
+    private Integer dinnerPoints;
+    private Integer otherPoints;
     private final String name;
 
     public Day(String name){
@@ -58,13 +58,30 @@ public class Day implements Parcelable {
         return this.dinnerPoints;
     }
     public void addOtherPoints(int otherPoints){
-        this.otherPoints += otherPoints;
+        if(this.otherPoints == null){
+            this.otherPoints = otherPoints;
+        }
+        else{
+            this.otherPoints += otherPoints;
+        }
     }
     public int getOtherPoints(){
         return this.otherPoints;
     }
     public int getTotalPoints(){
         return breakfastPoints + lunchPoints + dinnerPoints + otherPoints;
+    }
+    public boolean hasBreakfastPoints(){
+        return breakfastPoints != null;
+    }
+    public boolean hasLunchPoints(){
+        return lunchPoints != null;
+    }
+    public boolean hasDinnerPoints(){
+        return dinnerPoints != null;
+    }
+    public boolean hasOtherPoints(){
+        return otherPoints != null;
     }
 
     @Override
