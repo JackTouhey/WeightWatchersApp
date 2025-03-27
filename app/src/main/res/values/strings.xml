@@ -9,4 +9,6 @@
     <string name="submit_day">Submit Day</string>
     <string name="remaining_points">Remaining Points:</string>
     <string name="placeholder">placeholder</string>
+    <string name="daily_points">Daily:</string>
+    <string name="weekly_points">Weekly:</string>
 </resources>

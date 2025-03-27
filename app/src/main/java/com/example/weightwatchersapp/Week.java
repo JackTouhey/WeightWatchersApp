@@ -60,6 +60,9 @@ public class Week implements Parcelable {
             return monday;
         }
     }
+    public int getWeeklyPoints(){
+        return this.weeklyPoints;
+    }
     private void createNextDay(){
         Day currentDay = getCurrentDay();
         if(currentDay == monday){
@@ -79,7 +82,7 @@ public class Week implements Parcelable {
     public void completeDay(){
         int dayPointDifference = dailyLimit - getCurrentDay().getTotalPoints();
         if(dayPointDifference < 0){
-            weeklyPoints -= dayPointDifference;
+            weeklyPoints += dayPointDifference;
         }else if(dayPointDifference >= 4){
             weeklyPoints += 4;
         }else if(dayPointDifference > 0){

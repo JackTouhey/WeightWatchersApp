@@ -19,7 +19,8 @@ public class Controller {
     TextView dinnerPointsDisplay;
     TextView otherPointsDisplay;
     TextView currentDayDisplay;
-    TextView remainingPointsDisplay;
+    TextView dailyRemainingPointsDisplay;
+    TextView weeklyRemainingPointsDisplay;
     EditText breakfastPointsInput;
     EditText lunchPointsInput;
     EditText dinnerPointsInput;
@@ -67,7 +68,8 @@ public class Controller {
         dinnerPointsDisplay = this.activity.findViewById(R.id.dinnerPointDisplay);
         otherPointsDisplay = this.activity.findViewById(R.id.otherPointDisplay);
         currentDayDisplay = this.activity.findViewById(R.id.currentDayDisplay);
-        remainingPointsDisplay = this.activity.findViewById(R.id.remainingPointsDisplay);
+        dailyRemainingPointsDisplay = this.activity.findViewById(R.id.remainingDailyPointsDisplay);
+        weeklyRemainingPointsDisplay = this.activity.findViewById(R.id.remainingWeeklyPointsDisplay);
 
         updateDisplayValues();
         setupDayViewButtons();
@@ -94,7 +96,9 @@ public class Controller {
             otherPointsDisplay.setText(notEntered);
         }
         currentDayDisplay.setText(currentDay.getName());
-        remainingPointsDisplay.setText(String.valueOf(currentDay.getRemainingPoints()));
+        dailyRemainingPointsDisplay.setText(String.valueOf(currentDay.getRemainingPoints()));
+        weeklyRemainingPointsDisplay.setText(String.valueOf(currentWeek.getWeeklyPoints()));
+
     }
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);

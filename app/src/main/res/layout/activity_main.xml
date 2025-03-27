@@ -24,30 +24,21 @@
         android:layout_alignEnd="@+id/dayViewTextView"
         android:layout_alignParentTop="true"
         android:layout_marginTop="17dp"
-        android:layout_marginEnd="-70dp"
+        android:layout_marginEnd="-76dp"
         android:text="@string/placeholder" />
 
     <TextView
         android:id="@+id/remainingPointsTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/currentDayDisplay"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="329dp"
         android:layout_marginEnd="-138dp"
         android:text="@string/remaining_points"
         android:textSize="15sp"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/remainingPointsDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/remainingPointsTextView"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="-61dp"
-        android:text="@string/placeholder" />
 
     <TextView
         android:id="@+id/breakfastPointTextView"
@@ -187,4 +178,47 @@
         android:layout_marginStart="124dp"
         android:layout_marginTop="18dp"
         android:text="@string/submit_day" />
+
+    <TextView
+        android:id="@+id/remainingDailyPointsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="367dp"
+        android:text="@string/daily_points" />
+
+    <TextView
+        android:id="@+id/remainingDailyPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="106dp"
+        android:layout_marginTop="367dp"
+        android:layout_marginEnd="-61dp"
+        android:text="@string/placeholder" />
+
+    <TextView
+        android:id="@+id/remainingWeeklyPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="105dp"
+        android:layout_marginTop="391dp"
+        android:layout_marginEnd="-61dp"
+        android:text="@string/placeholder" />
+
+    <TextView
+        android:id="@+id/remainingWeeklyPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="391dp"
+        android:text="@string/weekly_points" />
+
 </RelativeLayout>
