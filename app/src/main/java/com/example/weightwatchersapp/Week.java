@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.ArrayList;
+
 public class Week implements Parcelable {
     private Day monday;
     private Day tuesday;
@@ -42,6 +44,31 @@ public class Week implements Parcelable {
             return new Week[size];
         }
     };
+    public ArrayList<Day> getHistory(){
+        ArrayList<Day> history = new ArrayList<>();
+        if(monday != null){
+            history.add(monday);
+        }
+        if(tuesday != null){
+            history.add(tuesday);
+        }
+        if(wednesday != null){
+            history.add(wednesday);
+        }
+        if(thursday != null){
+            history.add(thursday);
+        }
+        if(friday != null){
+            history.add(friday);
+        }
+        if(saturday != null){
+            history.add(saturday);
+        }
+        if(sunday != null){
+            history.add(sunday);
+        }
+        return history;
+    }
 
     public Day getCurrentDay(){
         if(sunday != null){

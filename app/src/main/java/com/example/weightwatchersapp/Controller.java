@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 public class Controller {
     Activity activity;
-    private ArrayList<Week> history = new ArrayList<Week>();
+    private ArrayList<Day> history = new ArrayList<Day>();
     private Day currentDay;
     private Week currentWeek;
     TextView breakfastPointsDisplay;
@@ -36,14 +36,14 @@ public class Controller {
         currentDay = currentWeek.getCurrentDay();
         setupDayView();
     }
-    public Controller(Activity activity, Day currentDay, Week currentWeek, ArrayList<Week> history){
+    public Controller(Activity activity, Day currentDay, Week currentWeek, ArrayList<Day> history){
         this.activity = activity;
         this.currentDay = currentDay;
         this.currentWeek = currentWeek;
         this.history = history;
         setupDayView();
     }
-    public ArrayList<Week> getHistory(){
+    public ArrayList<Day> getHistory(){
         return this.history;
     }
     public Day getCurrentDay(){
@@ -55,7 +55,7 @@ public class Controller {
     private void nextDay(){
         currentWeek.completeDay();
         if(isSunday()){
-            history.add(currentWeek);
+            history.addAll(currentWeek.getHistory());
             currentWeek = new Week();
         }
         currentDay = currentWeek.getCurrentDay();
