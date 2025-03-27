@@ -12,6 +12,7 @@ public class Day implements Parcelable {
     private Integer dinnerPoints;
     private Integer otherPoints;
     private final String name;
+    private final int dailyPoints = 28;
 
     public Day(String name){
         this.name = name;
@@ -69,7 +70,23 @@ public class Day implements Parcelable {
         return this.otherPoints;
     }
     public int getTotalPoints(){
-        return breakfastPoints + lunchPoints + dinnerPoints + otherPoints;
+        int total = 0;
+        if(breakfastPoints != null){
+            total += breakfastPoints;
+        }
+        if(lunchPoints != null){
+            total += lunchPoints;
+        }
+        if(dinnerPoints != null){
+            total += dinnerPoints;
+        }
+        if(otherPoints != null){
+            total += otherPoints;
+        }
+        return total;
+    }
+    public int getRemainingPoints(){
+        return dailyPoints - getTotalPoints();
     }
     public boolean hasBreakfastPoints(){
         return breakfastPoints != null;

@@ -17,6 +17,8 @@ public class Controller {
     TextView lunchPointsDisplay;
     TextView dinnerPointsDisplay;
     TextView otherPointsDisplay;
+    TextView currentDayDisplay;
+    TextView remainingPointsDisplay;
     EditText breakfastPointsInput;
     EditText lunchPointsInput;
     EditText dinnerPointsInput;
@@ -61,7 +63,13 @@ public class Controller {
         lunchPointsDisplay = this.activity.findViewById(R.id.lunchPointDisplay);
         dinnerPointsDisplay = this.activity.findViewById(R.id.dinnerPointDisplay);
         otherPointsDisplay = this.activity.findViewById(R.id.otherPointDisplay);
+        currentDayDisplay = this.activity.findViewById(R.id.currentDayDisplay);
+        remainingPointsDisplay = this.activity.findViewById(R.id.remainingPointsDisplay);
+
+        updateDisplayValues();
         setupDayViewButtons();
+    }
+    private void updateDisplayValues(){
         if(currentDay.hasBreakfastPoints()){
             breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
         }
@@ -74,6 +82,8 @@ public class Controller {
         if(currentDay.hasOtherPoints()){
             otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
         }
+        currentDayDisplay.setText(currentDay.getName());
+        remainingPointsDisplay.setText(String.valueOf(currentDay.getRemainingPoints()));
     }
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);
@@ -87,6 +97,7 @@ public class Controller {
                     try{
                         currentDay.setBreakfastPoints(Integer.parseInt(breakfastPointsInput.getText().toString()));
                         breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
+                        updateDisplayValues();
                     } catch (NumberFormatException nfe){
                         Log.d("POINTINPUTERROR", "NFE on setting current day breakfast points" + nfe);
                     }
@@ -102,6 +113,7 @@ public class Controller {
                     try{
                         currentDay.setLunchPoints(Integer.parseInt(lunchPointsInput.getText().toString()));
                         lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+                        updateDisplayValues();
                     } catch (NumberFormatException nfe){
                         Log.d("POINTINPUTERROR", "NFE on setting current day lunch points" + nfe);
                     }
@@ -116,6 +128,7 @@ public class Controller {
                     try{
                         currentDay.setDinnerPoints(Integer.parseInt(dinnerPointsInput.getText().toString()));
                         dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+                        updateDisplayValues();
                     } catch (NumberFormatException nfe){
                         Log.d("POINTINPUTERROR", "NFE on setting current day dinner points" + nfe);
                     }
@@ -130,6 +143,7 @@ public class Controller {
                     try{
                         currentDay.addOtherPoints(Integer.parseInt(otherPointsInput.getText().toString()));
                         otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+                        updateDisplayValues();
                     } catch (NumberFormatException nfe){
                         Log.d("POINTINPUTERROR", "NFE on setting current day other points" + nfe);
                     }
