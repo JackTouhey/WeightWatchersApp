@@ -187,7 +187,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="70dp"
         android:layout_marginTop="367dp"
-        android:text="@string/daily_points" />
+        android:text="@string/daily" />
 
     <TextView
         android:id="@+id/remainingDailyPointsDisplay"
@@ -230,6 +230,16 @@
         android:layout_marginStart="110dp"
         android:layout_marginTop="423dp"
         android:text="@string/add_beer" />
+
+    <Button
+        android:id="@+id/historyButton"
+        android:layout_width="149dp"
+        android:layout_height="70dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="655dp"
+        android:text="@string/history_button" />
 
     <Button
         android:id="@+id/addAllButton"

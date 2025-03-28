@@ -9,8 +9,17 @@
     <string name="submit_day">Submit Day</string>
     <string name="remaining_points">Remaining Points:</string>
     <string name="placeholder">placeholder</string>
-    <string name="daily_points">Daily:</string>
+    <string name="daily">Daily:</string>
     <string name="weekly_points">Weekly:</string>
     <string name="add_beer">Add Beer</string>
     <string name="add_all">Add All</string>
+    <string name="day_placeholder">currentDay</string>
+    <string name="daily_points">Daily Points:</string>
+    <string name="daily_points_placeholder">dailyPoints</string>
+    <string name="breakfast_points_placeholder">breakfastPoints</string>
+    <string name="lunch_points_placeholder">lunchPoints</string>
+    <string name="dinner_points_placeholder">dinnerPoints</string>
+    <string name="other_points_placeholder">otherPoints</string>
+    <string name="history_button">Go To History</string>
+    <string name="home">Home</string>
 </resources>

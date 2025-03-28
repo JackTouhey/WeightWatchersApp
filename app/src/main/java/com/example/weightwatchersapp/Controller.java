@@ -9,9 +9,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class Controller {
     Activity activity;
-    private ArrayList<Week> history = new ArrayList<Week>();
+    private ArrayList<Day> history = new ArrayList<Day>();
     private Day currentDay;
     private Week currentWeek;
     TextView breakfastPointsDisplay;
@@ -28,6 +31,9 @@ public class Controller {
     Button submitDay;
     Button addBeer;
     Button addAll;
+    Button historyButton;
+    Button homeButton;
+    RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
 
     public Controller(Activity activity){
@@ -36,14 +42,14 @@ public class Controller {
         currentDay = currentWeek.getCurrentDay();
         setupDayView();
     }
-    public Controller(Activity activity, Day currentDay, Week currentWeek, ArrayList<Week> history){
+    public Controller(Activity activity, Day currentDay, Week currentWeek, ArrayList<Day> history){
         this.activity = activity;
         this.currentDay = currentDay;
         this.currentWeek = currentWeek;
         this.history = history;
         setupDayView();
     }
-    public ArrayList<Week> getHistory(){
+    public ArrayList<Day> getHistory(){
         return this.history;
     }
     public Day getCurrentDay(){
@@ -53,9 +59,9 @@ public class Controller {
         return currentWeek;
     }
     private void nextDay(){
+        history.add(currentDay);
         currentWeek.completeDay();
         if(isSunday()){
-            history.add(currentWeek);
             currentWeek = new Week();
         }
         currentDay = currentWeek.getCurrentDay();
@@ -100,7 +106,6 @@ public class Controller {
         currentDayDisplay.setText(currentDay.getName());
         dailyRemainingPointsDisplay.setText(String.valueOf(currentDay.getRemainingPoints()));
         weeklyRemainingPointsDisplay.setText(String.valueOf(currentWeek.getWeeklyPoints()));
-
     }
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);
@@ -110,6 +115,8 @@ public class Controller {
         submitDay = this.activity.findViewById(R.id.submitDayButton);
         addBeer = this.activity.findViewById(R.id.addBeerButton);
         addAll = this.activity.findViewById(R.id.addAllButton);
+        historyButton = this.activity.findViewById(R.id.historyButton);
+
 
         breakfastPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event){
@@ -156,6 +163,9 @@ public class Controller {
         });
         addAll.setOnClickListener(e->{
             onAddAllClick();
+        });
+        historyButton.setOnClickListener(e->{
+            onHistoryClick();
         });
     }
     private void addBreakfast(){
@@ -214,5 +224,17 @@ public class Controller {
         addLunch();
         addDinner();
         addOther();
+    }
+    private void onHistoryClick(){
+        activity.setContentView(R.layout.history_view);
+        historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
+        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
+        HistoryAdapter adapter = new HistoryAdapter(history);
+        historyRecyclerView.setAdapter(adapter);
+        homeButton = this.activity.findViewById(R.id.homeButton);
+
+        homeButton.setOnClickListener(e->{
+            setupDayView();
+        });
     }
 }

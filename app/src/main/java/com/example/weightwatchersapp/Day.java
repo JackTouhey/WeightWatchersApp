@@ -44,19 +44,19 @@ public class Day implements Parcelable {
     public void setBreakfastPoints(int breakfastPoints) {
         this.breakfastPoints = breakfastPoints;
     }
-    public int getBreakfastPoints(){
+    public Integer getBreakfastPoints(){
         return this.breakfastPoints;
     }
     public void setLunchPoints(int lunchPoints){
         this.lunchPoints = lunchPoints;
     }
-    public int getLunchPoints(){
+    public Integer getLunchPoints(){
         return this.lunchPoints;
     }
     public void setDinnerPoints(int dinnerPoints){
         this.dinnerPoints = dinnerPoints;
     }
-    public int getDinnerPoints(){
+    public Integer getDinnerPoints(){
         return this.dinnerPoints;
     }
     public void addOtherPoints(int otherPoints){
@@ -67,7 +67,7 @@ public class Day implements Parcelable {
             this.otherPoints += otherPoints;
         }
     }
-    public int getOtherPoints(){
+    public Integer getOtherPoints(){
         return this.otherPoints;
     }
     public int getTotalPoints(){
