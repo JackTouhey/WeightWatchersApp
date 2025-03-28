@@ -1,5 +1,6 @@
 package com.example.weightwatchersapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,30 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
         holder.currentDayDisplay.setText(currentDay.getName());
         holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
-        holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
-        holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-        holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-        holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+        if(currentDay.getBreakfastPoints() != null){
+            holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
+        }
+        else{
+            holder.breakfastPointsDisplay.setText("Not Entered");
+        }
+        if(currentDay.getLunchPoints() != null){
+            holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+        }
+        else{
+            holder.lunchPointsDisplay.setText("Not Entered");
+        }
+        if(currentDay.getDinnerPoints() != null){
+            holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+        }
+        else{
+            holder.dinnerPointsDisplay.setText("Not Entered");
+        }
+        if(currentDay.getOtherPoints() != null){
+            holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+        }
+        else{
+            holder.otherPointsDisplay.setText("Not Entered");
+        }
     }
 
     @Override

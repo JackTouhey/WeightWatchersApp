@@ -7,7 +7,7 @@
     android:background="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/cuurentDayDisplay"
+        android:id="@+id/currentDayDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
