@@ -9,7 +9,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "Days")
-public class Day implements Parcelable {
+public class Day  {
 
     @PrimaryKey(autoGenerate = true)
     private int dId;
@@ -29,28 +29,11 @@ public class Day implements Parcelable {
     public Day(String name){
         this.name = name;
     }
-
-    protected Day(Parcel in) {
-        breakfastPoints = in.readInt();
-        lunchPoints = in.readInt();
-        dinnerPoints = in.readInt();
-        otherPoints = in.readInt();
-        name = in.readString();
-    }
-
-    public static final Creator<Day> CREATOR = new Creator<Day>() {
-        @Override
-        public Day createFromParcel(Parcel in) {
-            return new Day(in);
-        }
-        @Override
-        public Day[] newArray(int size) {
-            return new Day[size];
-        }
-    };
-
     public String getName(){
         return this.name;
+    }
+    public int getDayId(){
+        return this.dId;
     }
     public void setBreakfastPoints(int breakfastPoints) {
         this.breakfastPoints = breakfastPoints;
@@ -122,20 +105,6 @@ public class Day implements Parcelable {
     }
     public boolean hasOtherPoints(){
         return otherPoints != null;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(breakfastPoints);
-        dest.writeInt(lunchPoints);
-        dest.writeInt(dinnerPoints);
-        dest.writeInt(otherPoints);
-        dest.writeString(name);
     }
 }
 

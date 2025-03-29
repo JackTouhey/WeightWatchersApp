@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 @Entity(tableName = "Weeks")
-public class Week implements Parcelable {
+public class Week {
     @PrimaryKey(autoGenerate = true)
     private int wId;
     @ColumnInfo(name="monday")
@@ -33,30 +33,10 @@ public class Week implements Parcelable {
     public Week(){
         monday = new Day("Monday");
     }
-
-    protected Week(Parcel in) {
-        monday = in.readParcelable(Day.class.getClassLoader());
-        tuesday = in.readParcelable(Day.class.getClassLoader());
-        wednesday = in.readParcelable(Day.class.getClassLoader());
-        thursday = in.readParcelable(Day.class.getClassLoader());
-        friday = in.readParcelable(Day.class.getClassLoader());
-        saturday = in.readParcelable(Day.class.getClassLoader());
-        sunday = in.readParcelable(Day.class.getClassLoader());
-        weeklyPoints = in.readInt();
-        dailyLimit = in.readInt();
+    public int getWeekId(){
+        return this.wId;
     }
 
-    public static final Creator<Week> CREATOR = new Creator<Week>() {
-        @Override
-        public Week createFromParcel(Parcel in) {
-            return new Week(in);
-        }
-
-        @Override
-        public Week[] newArray(int size) {
-            return new Week[size];
-        }
-    };
     public ArrayList<Day> getHistory(){
         ArrayList<Day> history = new ArrayList<>();
         if(monday != null){
@@ -119,33 +99,15 @@ public class Week implements Parcelable {
             sunday = new Day("Sunday");
         }
     }
-    public void completeDay(){
+    public void completeDay() {
         int dayPointDifference = dailyLimit - getCurrentDay().getTotalPoints();
-        if(dayPointDifference < 0){
+        if (dayPointDifference < 0) {
             weeklyPoints += dayPointDifference;
-        }else if(dayPointDifference >= 4){
+        } else if (dayPointDifference >= 4) {
             weeklyPoints += 4;
-        }else if(dayPointDifference > 0){
+        } else if (dayPointDifference > 0) {
             weeklyPoints += dayPointDifference;
         }
         createNextDay();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeParcelable(monday, flags);
-        dest.writeParcelable(tuesday, flags);
-        dest.writeParcelable(wednesday, flags);
-        dest.writeParcelable(thursday, flags);
-        dest.writeParcelable(friday, flags);
-        dest.writeParcelable(saturday, flags);
-        dest.writeParcelable(sunday, flags);
-        dest.writeInt(weeklyPoints);
-        dest.writeInt(dailyLimit);
     }
 }
