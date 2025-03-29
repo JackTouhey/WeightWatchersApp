@@ -7,15 +7,21 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Dao
 public interface WeekDao {
     @Query("SELECT * FROM Weeks")
-    ArrayList<Week> getAll();
+    List<Week> getAllWeeks();
+
+    default ArrayList<Week> getAll(){
+        List<Week> weekList = getAllWeeks();
+        return new ArrayList<Week>(weekList);
+    }
     @Query("SELECT * FROM Weeks WHERE wId = :weekId")
-    Week getWeekById(int weekId);
+    Week getWeekById(long weekId);
     @Insert
-    int insert(Week week);
+    long insert(Week week);
     @Update
     void update(Week week);
     @Delete

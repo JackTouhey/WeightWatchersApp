@@ -36,6 +36,25 @@ public class Week {
     public int getWeekId(){
         return this.wId;
     }
+    public int getWId(){return this.wId;}
+    public Day getMonday(){return this.monday;}
+    public Day getTuesday(){return this.tuesday;}
+    public Day getWednesday(){return this.wednesday;}
+    public Day getThursday(){return this.thursday;}
+    public Day getFriday(){return this.friday;}
+    public Day getSaturday(){return this.saturday;}
+    public Day getSunday(){return this.sunday;}
+    public int getDailyLimit(){return this.dailyLimit;}
+    public void setWId(int wId){this.wId = wId;}
+    public void setMonday(Day monday){this.monday = monday;}
+    public void setTuesday(Day tuesday){this.tuesday = tuesday;}
+    public void setWednesday(Day wednesday){this.wednesday = wednesday;}
+    public void setThursday(Day thursday){this.thursday = thursday;}
+    public void setFriday(Day friday){this.friday = friday;}
+    public void setSaturday(Day saturday){this.saturday = saturday;}
+    public void setSunday(Day sunday){this.sunday = sunday;}
+    public void setDailyLimit(int dailyLimit){this.dailyLimit = dailyLimit;}
+    public void setWeeklyPoints(int weeklyPoints){this.weeklyPoints = weeklyPoints;}
 
     public ArrayList<Day> getHistory(){
         ArrayList<Day> history = new ArrayList<>();

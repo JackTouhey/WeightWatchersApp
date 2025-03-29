@@ -6,17 +6,21 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Dao
 public interface DayDao {
     @Query("SELECT * FROM Days")
-    ArrayList<Day> getAll();
+    List<Day> getAllDays();
+
+    default ArrayList<Day> getAll(){
+        List<Day> dayList = getAllDays();
+        return new ArrayList<Day>(dayList);
+    }
     @Query("SELECT * FROM Days WHERE dId = :dayId")
-    Day getDayById(int dayId);
+    Day getDayById(long dayId);
     @Insert
-    int insert(Day day);
+    long insert(Day day);
     @Update
     void update(Day day);
-    void delete(Day day);
-
 }

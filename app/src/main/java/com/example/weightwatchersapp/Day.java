@@ -23,8 +23,9 @@ public class Day  {
     private Integer otherPoints;
     @ColumnInfo(name = "name")
     private final String name;
+    @ColumnInfo(name = "beer_count")
     private int beerCount = 0;
-    private final int dailyPoints = 28;
+    private int dailyPoints = 28;
 
     public Day(String name){
         this.name = name;
@@ -32,22 +33,28 @@ public class Day  {
     public String getName(){
         return this.name;
     }
-    public int getDayId(){
+    public int getDId(){
         return this.dId;
     }
-    public void setBreakfastPoints(int breakfastPoints) {
+    public void setDId(int DId){this.dId = DId;}
+    public void setOtherPoints(Integer otherPoints){this.otherPoints = otherPoints;}
+    public void setBeerCount(int beerCount){this.beerCount = beerCount;}
+    public void setDailyPoints(int dailyPoints){this.dailyPoints = dailyPoints;}
+
+    public void setBreakfastPoints(Integer breakfastPoints) {
         this.breakfastPoints = breakfastPoints;
     }
+    public int getDailyPoints(){return this.dailyPoints;}
     public Integer getBreakfastPoints(){
         return this.breakfastPoints;
     }
-    public void setLunchPoints(int lunchPoints){
+    public void setLunchPoints(Integer lunchPoints){
         this.lunchPoints = lunchPoints;
     }
     public Integer getLunchPoints(){
         return this.lunchPoints;
     }
-    public void setDinnerPoints(int dinnerPoints){
+    public void setDinnerPoints(Integer dinnerPoints){
         this.dinnerPoints = dinnerPoints;
     }
     public Integer getDinnerPoints(){

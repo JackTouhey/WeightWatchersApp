@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState != null){
             controller = new Controller(this,
-                    savedInstanceState.getInt("currentDay"),
-                    savedInstanceState.getInt("currentWeek"));
+                    savedInstanceState.getLong("currentDay"),
+                    savedInstanceState.getLong("currentWeek"));
         }
         else{
             controller = new Controller(this);
@@ -29,9 +29,14 @@ public class MainActivity extends AppCompatActivity {
 
         controller.setupDayView();
     }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppDatabase.getDatabaseExecutor().shutdown();
+    }
     public void onSaveInstanceState(Bundle outstate){
-        outstate.putInt("currentDayId", controller.getCurrentDay().getDayId());
-        outstate.putInt("currentWeekId", controller.getCurrentWeek().getWeekId());
+        outstate.putLong("currentDayId", controller.getCurrentDay().getDId());
+        outstate.putLong("currentWeekId", controller.getCurrentWeek().getWeekId());
         super.onSaveInstanceState(outstate);
     }
 }

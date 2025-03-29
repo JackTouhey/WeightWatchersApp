@@ -15,9 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 public class Controller {
     Activity activity;
     private Day currentDay;
-    private int currentDayId;
+    private long currentDayId;
     private Week currentWeek;
-    private int currentWeekId;
+    private long currentWeekId;
+    private ArrayList<Day> history = new ArrayList<>();
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
     TextView dinnerPointsDisplay;
@@ -36,26 +37,38 @@ public class Controller {
     Button homeButton;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
-    private AppDatabase db = AppDatabase.getDatabase(this.activity);
+    private AppDatabase db;
+    private HistoryAdapter adapter;
 
     public Controller(Activity activity){
         this.activity = activity;
+        this.db = AppDatabase.getDatabase(this.activity);
         currentWeek = new Week();
-        currentWeekId = db.weekDao().insert(currentWeek);
         currentDay = currentWeek.getCurrentDay();
-        currentDayId = db.dayDao().insert(currentDay);
-        setupDayView();
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            currentWeekId = db.weekDao().insert(currentWeek);
+            currentDayId = db.dayDao().insert(currentDay);
+
+            activity.runOnUiThread(this::setupDayView);
+        });
     }
-    public Controller(Activity activity, int currentDayId, int currentWeekId){
+    public Controller(Activity activity, long currentDayId, long currentWeekId){
         this.activity = activity;
+        this.db = AppDatabase.getDatabase(this.activity);
         this.currentDayId = currentDayId;
-        this.currentDay = db.dayDao().getDayById(currentDayId);
         this.currentWeekId = currentWeekId;
-        this.currentWeek = db.weekDao().getWeekById(currentWeekId);
-        setupDayView();
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            this.currentDay = db.dayDao().getDayById(currentDayId);
+            this.currentWeek = db.weekDao().getWeekById(currentWeekId);
+
+            activity.runOnUiThread(this::setupDayView);
+        });
     }
     public ArrayList<Day> getHistory(){
-        return db.dayDao().getAll();
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            history = db.dayDao().getAll();
+        });
+        return history;
     }
     public Day getCurrentDay(){
         return this.currentDay;
@@ -67,10 +80,14 @@ public class Controller {
         currentWeek.completeDay();
         if(isSunday()){
             currentWeek = new Week();
-            currentWeekId = db.weekDao().insert(currentWeek);
         }
         currentDay = currentWeek.getCurrentDay();
-        currentDayId = db.dayDao().insert(currentDay);
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            currentWeekId = db.weekDao().insert(currentWeek);
+            currentDayId = db.dayDao().insert(currentDay);
+
+            activity.runOnUiThread(this::updateDisplayValues);
+        });
     }
     public boolean isSunday(){
         return currentDay.getName().equals("Sunday");
@@ -233,9 +250,11 @@ public class Controller {
     }
     private void onHistoryClick(){
         activity.setContentView(R.layout.history_view);
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            adapter = new HistoryAdapter(db.dayDao().getAll());
+        });
         historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
-        HistoryAdapter adapter = new HistoryAdapter(db.dayDao().getAll());
         historyRecyclerView.setAdapter(adapter);
         homeButton = this.activity.findViewById(R.id.homeButton);
 
