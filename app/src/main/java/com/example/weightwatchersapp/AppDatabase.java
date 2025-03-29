@@ -1,13 +1,15 @@
 package com.example.weightwatchersapp;
 
+import android.content.Context;
+
 import androidx.room.Database;
+import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 @Database(entities = {Day.class, Week.class}, version = 1)
 @TypeConverters({JSONConverter.class})
-public class AppDatabase extends RoomDatabase {
+public abstract class AppDatabase extends RoomDatabase {
     public abstract DayDao dayDao();
     public abstract WeekDao weekDao();
 
