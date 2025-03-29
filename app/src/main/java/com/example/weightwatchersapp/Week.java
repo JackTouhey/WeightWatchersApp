@@ -4,17 +4,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 
 public class Week implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    private int wId;
+    @ColumnInfo(name="monday")
     private Day monday;
+    @ColumnInfo(name = "tuesday")
     private Day tuesday;
+    @ColumnInfo(name = "wednesday")
     private Day wednesday;
+    @ColumnInfo(name = "thursday")
     private Day thursday;
+    @ColumnInfo(name = "friday")
     private Day friday;
+    @ColumnInfo(name = "saturday")
     private Day saturday;
+    @ColumnInfo(name = "sunday")
     private Day sunday;
+    @ColumnInfo(name = "weekly_points")
     private int weeklyPoints = 40;
     private int dailyLimit = 28;
     public Week(){

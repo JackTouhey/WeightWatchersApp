@@ -4,13 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "Days")
 public class Day implements Parcelable {
 
+    @PrimaryKey(autoGenerate = true)
+    private int dId;
+    @ColumnInfo(name = "breakfast_points")
     private Integer breakfastPoints;
+    @ColumnInfo(name = "lunch_points")
     private Integer lunchPoints;
+    @ColumnInfo(name = "dinner_points")
     private Integer dinnerPoints;
+    @ColumnInfo(name = "other_points")
     private Integer otherPoints;
+    @ColumnInfo(name = "name")
     private final String name;
     private int beerCount = 0;
     private final int dailyPoints = 28;
