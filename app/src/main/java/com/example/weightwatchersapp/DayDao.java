@@ -19,10 +19,16 @@ public interface DayDao {
     }
     @Query("SELECT * FROM Days WHERE dId = :dayId")
     Day getDayById(long dayId);
+    @Query("SELECT DISTINCT daily_points FROM Days WHERE dId = :dayId")
+    int getDailyPoints(long dayId);
     @Query("SELECT DISTINCT breakfast_points FROM Days WHERE dId = :dayId")
     Integer getBreakfastPoints(long dayId);
-    @Query("SELECT DISTINCT daily_points FROM Days Where dId = :dayId")
-    int getDailyPoints(long dayId);
+    @Query("SELECT DISTINCT lunch_points FROM Days WHERE dId = :dayId")
+    Integer getLunchPoints(long dayId);
+    @Query("SELECT DISTINCT dinner_points FROM Days WHERE dId = :dayId")
+    Integer getDinnerPoints(long dayId);
+    @Query("SELECT DISTINCT other_points FROM Days WHERE dId = :dayId")
+    Integer getOtherPoints(long dayId);
     @Insert
     long insert(Day day);
     @Update
