@@ -25,6 +25,7 @@ public class Day  {
     private final String name;
     @ColumnInfo(name = "beer_count")
     private int beerCount = 0;
+    @ColumnInfo(name = "daily_points")
     private int dailyPoints = 28;
 
     public Day(String name){

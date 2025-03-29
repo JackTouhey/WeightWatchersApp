@@ -1,5 +1,6 @@
 package com.example.weightwatchersapp;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,10 @@ import java.util.Collections;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
     private ArrayList<Day> history;
+    private AppDatabase db;
 
-    public HistoryAdapter(ArrayList<Day> history) {
+    public HistoryAdapter(ArrayList<Day> history, Activity activity) {
+        db = AppDatabase.getDatabase(activity);
         this.history = new ArrayList<>(history);
         Collections.reverse(this.history);
     }
@@ -27,34 +30,37 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-        Day currentDay = history.get(position);
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            long dId = (long)(history.size() - position);
+            Day currentDay = db.dayDao().getDayById(dId);
 
-        holder.currentDayDisplay.setText(currentDay.getName());
-        holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
-        if(currentDay.getBreakfastPoints() != null){
-            holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
-        }
-        else{
-            holder.breakfastPointsDisplay.setText("Not Entered");
-        }
-        if(currentDay.getLunchPoints() != null){
-            holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-        }
-        else{
-            holder.lunchPointsDisplay.setText("Not Entered");
-        }
-        if(currentDay.getDinnerPoints() != null){
-            holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-        }
-        else{
-            holder.dinnerPointsDisplay.setText("Not Entered");
-        }
-        if(currentDay.getOtherPoints() != null){
-            holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
-        }
-        else{
-            holder.otherPointsDisplay.setText("Not Entered");
-        }
+            holder.currentDayDisplay.setText(currentDay.getName());
+            holder.dailyPointsDisplay.setText(String.valueOf(db.dayDao().getDailyPoints(dId)));
+            if(currentDay.getBreakfastPoints() != null){
+                holder.breakfastPointsDisplay.setText(String.valueOf(db.dayDao().getBreakfastPoints(dId)));
+            }
+            else{
+                holder.breakfastPointsDisplay.setText("Not Entered");
+            }
+            if(currentDay.getLunchPoints() != null){
+                holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+            }
+            else{
+                holder.lunchPointsDisplay.setText("Not Entered");
+            }
+            if(currentDay.getDinnerPoints() != null){
+                holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+            }
+            else{
+                holder.dinnerPointsDisplay.setText("Not Entered");
+            }
+            if(currentDay.getOtherPoints() != null){
+                holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+            }
+            else{
+                holder.otherPointsDisplay.setText("Not Entered");
+            }
+        });
     }
 
     @Override

@@ -251,7 +251,7 @@ public class Controller {
     private void onHistoryClick(){
         activity.setContentView(R.layout.history_view);
         AppDatabase.getDatabaseExecutor().execute(() ->{
-            adapter = new HistoryAdapter(db.dayDao().getAll());
+            adapter = new HistoryAdapter(db.dayDao().getAll(), this.activity);
         });
         historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
