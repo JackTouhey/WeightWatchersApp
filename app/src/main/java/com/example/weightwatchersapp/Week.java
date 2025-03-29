@@ -5,10 +5,11 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
+import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
-
+@Entity(tableName = "Weeks")
 public class Week implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     private int wId;
