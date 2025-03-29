@@ -15,7 +15,7 @@ public interface WeekDao {
     @Query("SELECT * FROM Weeks WHERE wId = :weekId")
     Week getWeekById(int weekId);
     @Insert
-    void insert(Week week);
+    int insert(Week week);
     @Update
     void update(Week week);
     @Delete

@@ -20,9 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState != null){
             controller = new Controller(this,
-                    savedInstanceState.getParcelable("currentDay"),
-                    savedInstanceState.getParcelable("currentWeek"),
-                    savedInstanceState.getParcelableArrayList("history"));
+                    savedInstanceState.getInt("currentDay"),
+                    savedInstanceState.getInt("currentWeek"));
         }
         else{
             controller = new Controller(this);
@@ -31,9 +30,8 @@ public class MainActivity extends AppCompatActivity {
         controller.setupDayView();
     }
     public void onSaveInstanceState(Bundle outstate){
-        outstate.putParcelable("currentDay", controller.getCurrentDay());
-        outstate.putParcelable("currentWeek", controller.getCurrentWeek());
-        outstate.putParcelableArrayList("history", controller.getHistory());
+        outstate.putInt("currentDayId", controller.getCurrentDay().getDayId());
+        outstate.putInt("currentWeekId", controller.getCurrentWeek().getWeekId());
         super.onSaveInstanceState(outstate);
     }
 }

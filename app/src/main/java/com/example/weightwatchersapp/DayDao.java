@@ -14,7 +14,7 @@ public interface DayDao {
     @Query("SELECT * FROM Days WHERE dId = :dayId")
     Day getDayById(int dayId);
     @Insert
-    void insert(Day day);
+    int insert(Day day);
     @Update
     void update(Day day);
     void delete(Day day);

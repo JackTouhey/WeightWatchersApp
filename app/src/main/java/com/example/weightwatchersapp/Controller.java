@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class Controller {
     Activity activity;
-    private ArrayList<Day> history = new ArrayList<Day>();
     private Day currentDay;
+    private int currentDayId;
     private Week currentWeek;
+    private int currentWeekId;
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
     TextView dinnerPointsDisplay;
@@ -35,22 +36,26 @@ public class Controller {
     Button homeButton;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
+    private AppDatabase db = AppDatabase.getDatabase(this.activity);
 
     public Controller(Activity activity){
         this.activity = activity;
         currentWeek = new Week();
+        currentWeekId = db.weekDao().insert(currentWeek);
         currentDay = currentWeek.getCurrentDay();
+        currentDayId = db.dayDao().insert(currentDay);
         setupDayView();
     }
-    public Controller(Activity activity, Day currentDay, Week currentWeek, ArrayList<Day> history){
+    public Controller(Activity activity, int currentDayId, int currentWeekId){
         this.activity = activity;
-        this.currentDay = currentDay;
-        this.currentWeek = currentWeek;
-        this.history = history;
+        this.currentDayId = currentDayId;
+        this.currentDay = db.dayDao().getDayById(currentDayId);
+        this.currentWeekId = currentWeekId;
+        this.currentWeek = db.weekDao().getWeekById(currentWeekId);
         setupDayView();
     }
     public ArrayList<Day> getHistory(){
-        return this.history;
+        return db.dayDao().getAll();
     }
     public Day getCurrentDay(){
         return this.currentDay;
@@ -59,12 +64,13 @@ public class Controller {
         return currentWeek;
     }
     private void nextDay(){
-        history.add(currentDay);
         currentWeek.completeDay();
         if(isSunday()){
             currentWeek = new Week();
+            currentWeekId = db.weekDao().insert(currentWeek);
         }
         currentDay = currentWeek.getCurrentDay();
+        currentDayId = db.dayDao().insert(currentDay);
     }
     public boolean isSunday(){
         return currentDay.getName().equals("Sunday");
@@ -229,7 +235,7 @@ public class Controller {
         activity.setContentView(R.layout.history_view);
         historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
-        HistoryAdapter adapter = new HistoryAdapter(history);
+        HistoryAdapter adapter = new HistoryAdapter(db.dayDao().getAll());
         historyRecyclerView.setAdapter(adapter);
         homeButton = this.activity.findViewById(R.id.homeButton);
 
