@@ -31,6 +31,8 @@ public interface DayDao {
     Integer getOtherPoints(long dayId);
     @Query("SELECT DISTINCT name FROM Days WHERE dId = :dayId")
     String getName(long dayId);
+    @Query("SELECT MAX(dId) FROM Days")
+    long getCurrentDId();
     default int getTotalPoints(long dayId){
         int total = 0;
         if(getBreakfastPoints(dayId) != null){

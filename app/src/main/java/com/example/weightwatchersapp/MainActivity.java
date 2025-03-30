@@ -17,16 +17,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null){
-            controller = new Controller(this,
-                    savedInstanceState.getLong("currentDayId"),
-                    savedInstanceState.getLong("currentWeekId"));
-        }
-        else{
-            controller = new Controller(this);
-        }
-
+        controller = new Controller(this);
         controller.setupDayView();
     }
     @Override
@@ -35,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
         AppDatabase.getDatabaseExecutor().shutdown();
     }
     public void onSaveInstanceState(Bundle outstate){
-        outstate.putLong("currentDayId", controller.getCurrentDay().getDId());
-        outstate.putLong("currentWeekId", controller.getCurrentWeek().getWeekId());
         super.onSaveInstanceState(outstate);
     }
 }

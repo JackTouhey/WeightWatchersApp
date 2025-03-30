@@ -20,6 +20,8 @@ public interface WeekDao {
     }
     @Query("SELECT * FROM Weeks WHERE wId = :weekId")
     Week getWeekById(long weekId);
+    @Query("SELECT MAX(wId) FROM Weeks")
+    long getCurrentWId();
     @Insert
     long insert(Week week);
     @Update

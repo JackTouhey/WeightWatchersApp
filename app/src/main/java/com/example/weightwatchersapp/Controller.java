@@ -43,12 +43,20 @@ public class Controller {
     public Controller(Activity activity){
         this.activity = activity;
         this.db = AppDatabase.getDatabase(this.activity);
-        currentWeek = new Week();
-        currentDay = currentWeek.getCurrentDay();
         AppDatabase.getDatabaseExecutor().execute(() ->{
-            currentWeekId = db.weekDao().insert(currentWeek);
-            currentDayId = db.dayDao().insert(currentDay);
-
+            currentDayId = db.dayDao().getCurrentDId();
+            if(currentDayId == 0){
+                currentWeek = new Week();
+                currentDay = currentWeek.getCurrentDay();
+                currentWeekId = db.weekDao().insert(currentWeek);
+                currentDayId = db.dayDao().insert(currentDay);
+            }
+            else{
+                currentWeekId = db.weekDao().getCurrentWId();
+                currentDay = db.dayDao().getDayById(currentDayId);
+                currentWeek = db.weekDao().getWeekById(currentWeekId);
+            }
+            Log.d("DEBUG", "CurrentDId: " + currentDayId);
             activity.runOnUiThread(this::setupDayView);
         });
     }
@@ -114,7 +122,7 @@ public class Controller {
     private void updateDisplayValues(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
             Day day = db.dayDao().getDayById(currentDayId);
-
+            Week week = db.weekDao().getWeekById(currentWeekId);
             boolean hasBreakfast = day.hasBreakfastPoints();
             String breakfastValue = hasBreakfast ?
                     String.valueOf(day.getBreakfastPoints()) : notEntered;
@@ -133,7 +141,7 @@ public class Controller {
 
             String currentDayName = day.getName();
             String dailyRemaining = String.valueOf(day.getRemainingPoints());
-            String weeklyRemaining = String.valueOf(currentWeek.getWeeklyPoints());
+            String weeklyRemaining = String.valueOf(week.getWeeklyPoints());
 
             activity.runOnUiThread(() -> {
                 breakfastPointsDisplay.setText(breakfastValue);
