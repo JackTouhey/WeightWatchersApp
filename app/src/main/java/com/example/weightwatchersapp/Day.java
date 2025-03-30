@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey;
 public class Day  {
 
     @PrimaryKey(autoGenerate = true)
-    private int dId;
+    private long dId;
     @ColumnInfo(name = "breakfast_points")
     private Integer breakfastPoints;
     @ColumnInfo(name = "lunch_points")
@@ -34,7 +34,7 @@ public class Day  {
     public String getName(){
         return this.name;
     }
-    public int getDId(){
+    public long getDId(){
         return this.dId;
     }
     public void setDId(int DId){this.dId = DId;}
@@ -88,7 +88,7 @@ public class Day  {
         }
         return total;
     }
-    public int getRemainingPoints(){
+    public Integer getRemainingPoints(){
         return dailyPoints - getTotalPoints();
     }
     public int getBeerCount(){

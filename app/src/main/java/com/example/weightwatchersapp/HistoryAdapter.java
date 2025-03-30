@@ -13,8 +13,10 @@ import java.util.Collections;
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
     private ArrayList<Day> history;
     private AppDatabase db;
+    private Activity activity;
 
     public HistoryAdapter(ArrayList<Day> history, Activity activity) {
+        this.activity = activity;
         db = AppDatabase.getDatabase(activity);
         this.history = new ArrayList<>(history);
         Collections.reverse(this.history);
@@ -34,32 +36,34 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             long dId = (long)(history.size() - position);
             Day currentDay = db.dayDao().getDayById(dId);
 
-            holder.currentDayDisplay.setText(currentDay.getName());
-            holder.dailyPointsDisplay.setText(String.valueOf(db.dayDao().getDailyPoints(dId)));
-            if(currentDay.getBreakfastPoints() != null){
-                holder.breakfastPointsDisplay.setText(String.valueOf(db.dayDao().getBreakfastPoints(dId)));
-            }
-            else{
-                holder.breakfastPointsDisplay.setText("Not Entered");
-            }
-            if(currentDay.getLunchPoints() != null){
-                holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-            }
-            else{
-                holder.lunchPointsDisplay.setText("Not Entered");
-            }
-            if(currentDay.getDinnerPoints() != null){
-                holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-            }
-            else{
-                holder.dinnerPointsDisplay.setText("Not Entered");
-            }
-            if(currentDay.getOtherPoints() != null){
-                holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
-            }
-            else{
-                holder.otherPointsDisplay.setText("Not Entered");
-            }
+            activity.runOnUiThread(() ->{
+                holder.currentDayDisplay.setText(currentDay.getName());
+                holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getDailyPoints()));
+                if(currentDay.getBreakfastPoints() != null){
+                    holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
+                }
+                else{
+                    holder.breakfastPointsDisplay.setText("Not Entered");
+                }
+                if(currentDay.getLunchPoints() != null){
+                    holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+                }
+                else{
+                    holder.lunchPointsDisplay.setText("Not Entered");
+                }
+                if(currentDay.getDinnerPoints() != null){
+                    holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+                }
+                else{
+                    holder.dinnerPointsDisplay.setText("Not Entered");
+                }
+                if(currentDay.getOtherPoints() != null){
+                    holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+                }
+                else{
+                    holder.otherPointsDisplay.setText("Not Entered");
+                }
+            });
         });
     }
 

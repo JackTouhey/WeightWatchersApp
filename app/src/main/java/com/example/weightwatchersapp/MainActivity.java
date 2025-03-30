@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(savedInstanceState != null){
             controller = new Controller(this,
-                    savedInstanceState.getLong("currentDay"),
-                    savedInstanceState.getLong("currentWeek"));
+                    savedInstanceState.getLong("currentDayId"),
+                    savedInstanceState.getLong("currentWeekId"));
         }
         else{
             controller = new Controller(this);

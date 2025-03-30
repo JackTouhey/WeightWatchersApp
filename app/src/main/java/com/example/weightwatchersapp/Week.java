@@ -36,6 +36,7 @@ public class Week {
     public int getWeekId(){
         return this.wId;
     }
+
     public int getWId(){return this.wId;}
     public Day getMonday(){return this.monday;}
     public Day getTuesday(){return this.tuesday;}

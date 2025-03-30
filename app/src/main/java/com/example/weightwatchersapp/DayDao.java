@@ -29,6 +29,27 @@ public interface DayDao {
     Integer getDinnerPoints(long dayId);
     @Query("SELECT DISTINCT other_points FROM Days WHERE dId = :dayId")
     Integer getOtherPoints(long dayId);
+    @Query("SELECT DISTINCT name FROM Days WHERE dId = :dayId")
+    String getName(long dayId);
+    default int getTotalPoints(long dayId){
+        int total = 0;
+        if(getBreakfastPoints(dayId) != null){
+            total += getBreakfastPoints(dayId);
+        }
+        if(getLunchPoints(dayId) != null){
+            total += getLunchPoints(dayId);
+        }
+        if(getDinnerPoints(dayId) != null){
+            total += getDinnerPoints(dayId);
+        }
+        if(getOtherPoints(dayId) != null){
+            total += getOtherPoints(dayId);
+        }
+        return total;
+    }
+    default int getRemainingPoints(long dayId){
+        return getDailyPoints(dayId) - getTotalPoints(dayId);
+    }
     @Insert
     long insert(Day day);
     @Update

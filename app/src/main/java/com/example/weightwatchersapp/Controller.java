@@ -77,19 +77,25 @@ public class Controller {
         return currentWeek;
     }
     private void nextDay(){
-        currentWeek.completeDay();
-        if(isSunday()){
-            currentWeek = new Week();
-        }
-        currentDay = currentWeek.getCurrentDay();
         AppDatabase.getDatabaseExecutor().execute(() ->{
-            currentWeekId = db.weekDao().insert(currentWeek);
-            currentDayId = db.dayDao().insert(currentDay);
+            Week week = db.weekDao().getWeekById(currentWeekId);
+            week.completeDay();
+            db.weekDao().update(week);
 
-            activity.runOnUiThread(this::updateDisplayValues);
+            if(isSunday()){
+                currentWeek = new Week();
+                currentWeekId = db.weekDao().insert(currentWeek);
+            }
+            week = db.weekDao().getWeekById(currentWeekId);
+            currentDay = week.getCurrentDay();
+            currentDayId = db.dayDao().insert(currentDay);
+            updateDisplayValues();
         });
     }
     public boolean isSunday(){
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            currentDay = db.dayDao().getDayById(currentDayId);
+        });
         return currentDay.getName().equals("Sunday");
     }
     public void setupDayView(){
@@ -106,29 +112,39 @@ public class Controller {
         setupDayViewButtons();
     }
     private void updateDisplayValues(){
-        if(currentDay.hasBreakfastPoints()){
-            breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
-        }else{
-            breakfastPointsDisplay.setText(notEntered);
-        }
-        if(currentDay.hasLunchPoints()){
-            lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-        }else{
-            lunchPointsDisplay.setText(notEntered);
-        }
-        if(currentDay.hasDinnerPoints()){
-            dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-        }else{
-            dinnerPointsDisplay.setText(notEntered);
-        }
-        if(currentDay.hasOtherPoints()){
-            otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
-        }else{
-            otherPointsDisplay.setText(notEntered);
-        }
-        currentDayDisplay.setText(currentDay.getName());
-        dailyRemainingPointsDisplay.setText(String.valueOf(currentDay.getRemainingPoints()));
-        weeklyRemainingPointsDisplay.setText(String.valueOf(currentWeek.getWeeklyPoints()));
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            Day day = db.dayDao().getDayById(currentDayId);
+
+            boolean hasBreakfast = day.hasBreakfastPoints();
+            String breakfastValue = hasBreakfast ?
+                    String.valueOf(day.getBreakfastPoints()) : notEntered;
+
+            boolean hasLunch = day.hasLunchPoints();
+            String lunchValue = hasLunch ?
+                    String.valueOf(day.getLunchPoints()) : notEntered;
+
+            boolean hasDinner = day.hasDinnerPoints();
+            String dinnerValue = hasDinner ?
+                    String.valueOf(day.getDinnerPoints()) : notEntered;
+
+            boolean hasOther = day.hasOtherPoints();
+            String otherValue = hasOther ?
+                    String.valueOf(day.getOtherPoints()) : notEntered;
+
+            String currentDayName = day.getName();
+            String dailyRemaining = String.valueOf(day.getRemainingPoints());
+            String weeklyRemaining = String.valueOf(currentWeek.getWeeklyPoints());
+
+            activity.runOnUiThread(() -> {
+                breakfastPointsDisplay.setText(breakfastValue);
+                lunchPointsDisplay.setText(lunchValue);
+                dinnerPointsDisplay.setText(dinnerValue);
+                otherPointsDisplay.setText(otherValue);
+                currentDayDisplay.setText(currentDayName);
+                dailyRemainingPointsDisplay.setText(dailyRemaining);
+                weeklyRemainingPointsDisplay.setText(weeklyRemaining);
+            });
+        });
     }
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);
@@ -144,7 +160,7 @@ public class Controller {
         breakfastPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event){
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addBreakfast();
+                    addBreakfast(false);
                     return true;
                 }
                 return false;
@@ -154,7 +170,7 @@ public class Controller {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addLunch();
+                    addLunch(false);
                     return true;
                 }
                 return false;
@@ -163,7 +179,7 @@ public class Controller {
         dinnerPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addDinner();
+                    addDinner(false);
                     return true;
                 }
                 return false;
@@ -172,7 +188,7 @@ public class Controller {
         otherPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addOther();
+                    addOther(false);
                     return true;
                 }
                 return false;
@@ -191,41 +207,69 @@ public class Controller {
             onHistoryClick();
         });
     }
-    private void addBreakfast(){
+    private void addBreakfast(boolean addAll){
         try{
-            currentDay.setBreakfastPoints(Integer.parseInt(breakfastPointsInput.getText().toString()));
-            breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
-            updateDisplayValues();
+            Integer breakfastPoints = Integer.parseInt(breakfastPointsInput.getText().toString());
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                Day day = db.dayDao().getDayById(currentDayId);
+                day.setBreakfastPoints(breakfastPoints);
+                db.dayDao().update(day);
+                currentDay = day;
+                if(!addAll){
+                    updateDisplayValues();
+                }
+            });
             breakfastPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day breakfast points" + nfe);
         }
     }
-    private void addLunch(){
+    private void addLunch(boolean addAll){
         try{
-            currentDay.setLunchPoints(Integer.parseInt(lunchPointsInput.getText().toString()));
-            lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-            updateDisplayValues();
+            Integer lunchPoints = Integer.parseInt(lunchPointsInput.getText().toString());
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                Day day = db.dayDao().getDayById(currentDayId);
+                day.setLunchPoints(lunchPoints);
+                db.dayDao().update(day);
+                currentDay = day;
+                if(!addAll){
+                    updateDisplayValues();
+                }
+            });
             lunchPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day lunch points" + nfe);
         }
     }
-    private void addDinner(){
+    private void addDinner(boolean addAll){
         try{
-            currentDay.setDinnerPoints(Integer.parseInt(dinnerPointsInput.getText().toString()));
-            dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-            updateDisplayValues();
+            Integer dinnerPoints = Integer.parseInt(dinnerPointsInput.getText().toString());
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                Day day = db.dayDao().getDayById(currentDayId);
+                day.setDinnerPoints(dinnerPoints);
+                db.dayDao().update(day);
+                currentDay = day;
+                if(!addAll){
+                    updateDisplayValues();
+                }
+            });
             dinnerPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day dinner points" + nfe);
         }
     }
-    private void addOther(){
+    private void addOther(boolean addAll){
         try{
-            currentDay.addOtherPoints(Integer.parseInt(otherPointsInput.getText().toString()));
-            otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
-            updateDisplayValues();
+            Integer otherPoints = Integer.parseInt(otherPointsInput.getText().toString());
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                Day day = db.dayDao().getDayById(currentDayId);
+                day.setOtherPoints(otherPoints);
+                db.dayDao().update(day);
+                currentDay = day;
+                if(!addAll){
+                    updateDisplayValues();
+                }
+            });
             otherPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day other points" + nfe);
@@ -236,17 +280,23 @@ public class Controller {
         updateDisplayValues();
     }
     private void onAddBeerClick(){
-        currentDay.addBeer();
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            Day day = db.dayDao().getDayById(currentDayId);
+            day.addBeer();
+            db.dayDao().update(day);
+            currentDay = day;
+        });
         updateDisplayValues();
         if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 8) + 4)){
             //Insult
         }
     }
     private void onAddAllClick(){
-        addBreakfast();
-        addLunch();
-        addDinner();
-        addOther();
+        addBreakfast(true);
+        addLunch(true);
+        addDinner(true);
+        addOther(true);
+        updateDisplayValues();
     }
     private void onHistoryClick(){
         activity.setContentView(R.layout.history_view);
