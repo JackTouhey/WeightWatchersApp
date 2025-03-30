@@ -22,4 +22,5 @@
     <string name="other_points_placeholder">otherPoints</string>
     <string name="history_button">Go To History</string>
     <string name="home">Home</string>
+    <string name="day_id_placeholder">Day ID</string>
 </resources>

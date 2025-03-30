@@ -160,7 +160,7 @@ public class Controller {
         breakfastPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event){
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addBreakfast(false);
+                    addBreakfast();
                     return true;
                 }
                 return false;
@@ -170,7 +170,7 @@ public class Controller {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addLunch(false);
+                    addLunch();
                     return true;
                 }
                 return false;
@@ -179,7 +179,7 @@ public class Controller {
         dinnerPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addDinner(false);
+                    addDinner();
                     return true;
                 }
                 return false;
@@ -188,7 +188,7 @@ public class Controller {
         otherPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    addOther(false);
+                    addOther();
                     return true;
                 }
                 return false;
@@ -207,7 +207,7 @@ public class Controller {
             onHistoryClick();
         });
     }
-    private void addBreakfast(boolean addAll){
+    private void addBreakfast(){
         try{
             Integer breakfastPoints = Integer.parseInt(breakfastPointsInput.getText().toString());
             AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -215,16 +215,14 @@ public class Controller {
                 day.setBreakfastPoints(breakfastPoints);
                 db.dayDao().update(day);
                 currentDay = day;
-                if(!addAll){
-                    updateDisplayValues();
-                }
+                updateDisplayValues();
             });
             breakfastPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day breakfast points" + nfe);
         }
     }
-    private void addLunch(boolean addAll){
+    private void addLunch(){
         try{
             Integer lunchPoints = Integer.parseInt(lunchPointsInput.getText().toString());
             AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -232,16 +230,15 @@ public class Controller {
                 day.setLunchPoints(lunchPoints);
                 db.dayDao().update(day);
                 currentDay = day;
-                if(!addAll){
-                    updateDisplayValues();
-                }
+                updateDisplayValues();
+
             });
             lunchPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day lunch points" + nfe);
         }
     }
-    private void addDinner(boolean addAll){
+    private void addDinner(){
         try{
             Integer dinnerPoints = Integer.parseInt(dinnerPointsInput.getText().toString());
             AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -249,16 +246,14 @@ public class Controller {
                 day.setDinnerPoints(dinnerPoints);
                 db.dayDao().update(day);
                 currentDay = day;
-                if(!addAll){
-                    updateDisplayValues();
-                }
+                updateDisplayValues();
             });
             dinnerPointsInput.setText("");
         } catch (NumberFormatException nfe){
             Log.d("POINTINPUTERROR", "NFE on setting current day dinner points" + nfe);
         }
     }
-    private void addOther(boolean addAll){
+    private void addOther(){
         try{
             Integer otherPoints = Integer.parseInt(otherPointsInput.getText().toString());
             AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -266,9 +261,7 @@ public class Controller {
                 day.setOtherPoints(otherPoints);
                 db.dayDao().update(day);
                 currentDay = day;
-                if(!addAll){
-                    updateDisplayValues();
-                }
+                updateDisplayValues();
             });
             otherPointsInput.setText("");
         } catch (NumberFormatException nfe){
@@ -291,12 +284,59 @@ public class Controller {
             //Insult
         }
     }
-    private void onAddAllClick(){
-        addBreakfast(true);
-        addLunch(true);
-        addDinner(true);
-        addOther(true);
-        updateDisplayValues();
+    private void onAddAllClick() {
+        try {
+            Integer breakfastPoints = null;
+            Integer lunchPoints = null;
+            Integer dinnerPoints = null;
+            Integer otherPoints = null;
+
+            if (!breakfastPointsInput.getText().toString().isEmpty()) {
+                breakfastPoints = Integer.parseInt(breakfastPointsInput.getText().toString());
+            }
+            if (!lunchPointsInput.getText().toString().isEmpty()) {
+                lunchPoints = Integer.parseInt(lunchPointsInput.getText().toString());
+            }
+            if (!dinnerPointsInput.getText().toString().isEmpty()) {
+                dinnerPoints = Integer.parseInt(dinnerPointsInput.getText().toString());
+            }
+            if (!otherPointsInput.getText().toString().isEmpty()) {
+                otherPoints = Integer.parseInt(otherPointsInput.getText().toString());
+            }
+
+            final Integer finalBreakfastPoints = breakfastPoints;
+            final Integer finalLunchPoints = lunchPoints;
+            final Integer finalDinnerPoints = dinnerPoints;
+            final Integer finalOtherPoints = otherPoints;
+
+            AppDatabase.getDatabaseExecutor().execute(() -> {
+                Day day = db.dayDao().getDayById(currentDayId);
+
+                if (finalBreakfastPoints != null) {
+                    day.setBreakfastPoints(finalBreakfastPoints);
+                }
+                if (finalLunchPoints != null) {
+                    day.setLunchPoints(finalLunchPoints);
+                }
+                if (finalDinnerPoints != null) {
+                    day.setDinnerPoints(finalDinnerPoints);
+                }
+                if (finalOtherPoints != null) {
+                    day.setOtherPoints(finalOtherPoints);
+                }
+                db.dayDao().update(day);
+                currentDay = day;
+                updateDisplayValues();
+            });
+
+            breakfastPointsInput.setText("");
+            lunchPointsInput.setText("");
+            dinnerPointsInput.setText("");
+            otherPointsInput.setText("");
+
+        } catch (NumberFormatException nfe) {
+            Log.d("POINTINPUTERROR", "NFE on setting day points: " + nfe);
+        }
     }
     private void onHistoryClick(){
         activity.setContentView(R.layout.history_view);

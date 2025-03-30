@@ -38,7 +38,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
             activity.runOnUiThread(() ->{
                 holder.currentDayDisplay.setText(currentDay.getName());
-                holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getDailyPoints()));
+                holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
+                holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
                 if(currentDay.getBreakfastPoints() != null){
                     holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                 }
@@ -74,6 +75,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     static class HistoryViewHolder extends RecyclerView.ViewHolder {
         TextView currentDayDisplay;
+        TextView dayIdDisplay;
         TextView dailyPointsDisplay;
         TextView breakfastPointsDisplay;
         TextView lunchPointsDisplay;
@@ -83,6 +85,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             currentDayDisplay = itemView.findViewById(R.id.currentDayDisplay);
+            dayIdDisplay = itemView.findViewById(R.id.dayIdDisplay);
             dailyPointsDisplay = itemView.findViewById(R.id.dailyPointsDisplay);
             breakfastPointsDisplay = itemView.findViewById(R.id.breakfastPointsDisplay);
             lunchPointsDisplay = itemView.findViewById(R.id.lunchPointsDisplay);
