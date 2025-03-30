@@ -17,23 +17,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(savedInstanceState != null){
-            controller = new Controller(this,
-                    savedInstanceState.getParcelable("currentDay"),
-                    savedInstanceState.getParcelable("currentWeek"),
-                    savedInstanceState.getParcelableArrayList("history"));
-        }
-        else{
-            controller = new Controller(this);
-        }
-
+        controller = new Controller(this);
         controller.setupDayView();
     }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        AppDatabase.getDatabaseExecutor().shutdown();
+    }
     public void onSaveInstanceState(Bundle outstate){
-        outstate.putParcelable("currentDay", controller.getCurrentDay());
-        outstate.putParcelable("currentWeek", controller.getCurrentWeek());
-        outstate.putParcelableArrayList("history", controller.getHistory());
         super.onSaveInstanceState(outstate);
     }
 }

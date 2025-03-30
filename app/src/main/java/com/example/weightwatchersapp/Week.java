@@ -4,46 +4,59 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
-
-public class Week implements Parcelable {
+@Entity(tableName = "Weeks")
+public class Week {
+    @PrimaryKey(autoGenerate = true)
+    private int wId;
+    @ColumnInfo(name="monday")
     private Day monday;
+    @ColumnInfo(name = "tuesday")
     private Day tuesday;
+    @ColumnInfo(name = "wednesday")
     private Day wednesday;
+    @ColumnInfo(name = "thursday")
     private Day thursday;
+    @ColumnInfo(name = "friday")
     private Day friday;
+    @ColumnInfo(name = "saturday")
     private Day saturday;
+    @ColumnInfo(name = "sunday")
     private Day sunday;
+    @ColumnInfo(name = "weekly_points")
     private int weeklyPoints = 40;
     private int dailyLimit = 28;
     public Week(){
         monday = new Day("Monday");
     }
-
-    protected Week(Parcel in) {
-        monday = in.readParcelable(Day.class.getClassLoader());
-        tuesday = in.readParcelable(Day.class.getClassLoader());
-        wednesday = in.readParcelable(Day.class.getClassLoader());
-        thursday = in.readParcelable(Day.class.getClassLoader());
-        friday = in.readParcelable(Day.class.getClassLoader());
-        saturday = in.readParcelable(Day.class.getClassLoader());
-        sunday = in.readParcelable(Day.class.getClassLoader());
-        weeklyPoints = in.readInt();
-        dailyLimit = in.readInt();
+    public int getWeekId(){
+        return this.wId;
     }
 
-    public static final Creator<Week> CREATOR = new Creator<Week>() {
-        @Override
-        public Week createFromParcel(Parcel in) {
-            return new Week(in);
-        }
+    public int getWId(){return this.wId;}
+    public Day getMonday(){return this.monday;}
+    public Day getTuesday(){return this.tuesday;}
+    public Day getWednesday(){return this.wednesday;}
+    public Day getThursday(){return this.thursday;}
+    public Day getFriday(){return this.friday;}
+    public Day getSaturday(){return this.saturday;}
+    public Day getSunday(){return this.sunday;}
+    public int getDailyLimit(){return this.dailyLimit;}
+    public void setWId(int wId){this.wId = wId;}
+    public void setMonday(Day monday){this.monday = monday;}
+    public void setTuesday(Day tuesday){this.tuesday = tuesday;}
+    public void setWednesday(Day wednesday){this.wednesday = wednesday;}
+    public void setThursday(Day thursday){this.thursday = thursday;}
+    public void setFriday(Day friday){this.friday = friday;}
+    public void setSaturday(Day saturday){this.saturday = saturday;}
+    public void setSunday(Day sunday){this.sunday = sunday;}
+    public void setDailyLimit(int dailyLimit){this.dailyLimit = dailyLimit;}
+    public void setWeeklyPoints(int weeklyPoints){this.weeklyPoints = weeklyPoints;}
 
-        @Override
-        public Week[] newArray(int size) {
-            return new Week[size];
-        }
-    };
     public ArrayList<Day> getHistory(){
         ArrayList<Day> history = new ArrayList<>();
         if(monday != null){
@@ -106,33 +119,15 @@ public class Week implements Parcelable {
             sunday = new Day("Sunday");
         }
     }
-    public void completeDay(){
+    public void completeDay() {
         int dayPointDifference = dailyLimit - getCurrentDay().getTotalPoints();
-        if(dayPointDifference < 0){
+        if (dayPointDifference < 0) {
             weeklyPoints += dayPointDifference;
-        }else if(dayPointDifference >= 4){
+        } else if (dayPointDifference >= 4) {
             weeklyPoints += 4;
-        }else if(dayPointDifference > 0){
+        } else if (dayPointDifference > 0) {
             weeklyPoints += dayPointDifference;
         }
         createNextDay();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeParcelable(monday, flags);
-        dest.writeParcelable(tuesday, flags);
-        dest.writeParcelable(wednesday, flags);
-        dest.writeParcelable(thursday, flags);
-        dest.writeParcelable(friday, flags);
-        dest.writeParcelable(saturday, flags);
-        dest.writeParcelable(sunday, flags);
-        dest.writeInt(weeklyPoints);
-        dest.writeInt(dailyLimit);
     }
 }

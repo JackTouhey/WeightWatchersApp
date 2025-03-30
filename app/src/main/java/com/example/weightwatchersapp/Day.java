@@ -4,56 +4,58 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-public class Day implements Parcelable {
+@Entity(tableName = "Days")
+public class Day  {
 
+    @PrimaryKey(autoGenerate = true)
+    private long dId;
+    @ColumnInfo(name = "breakfast_points")
     private Integer breakfastPoints;
+    @ColumnInfo(name = "lunch_points")
     private Integer lunchPoints;
+    @ColumnInfo(name = "dinner_points")
     private Integer dinnerPoints;
+    @ColumnInfo(name = "other_points")
     private Integer otherPoints;
+    @ColumnInfo(name = "name")
     private final String name;
+    @ColumnInfo(name = "beer_count")
     private int beerCount = 0;
-    private final int dailyPoints = 28;
+    @ColumnInfo(name = "daily_points")
+    private int dailyPoints = 28;
 
     public Day(String name){
         this.name = name;
     }
-
-    protected Day(Parcel in) {
-        breakfastPoints = in.readInt();
-        lunchPoints = in.readInt();
-        dinnerPoints = in.readInt();
-        otherPoints = in.readInt();
-        name = in.readString();
-    }
-
-    public static final Creator<Day> CREATOR = new Creator<Day>() {
-        @Override
-        public Day createFromParcel(Parcel in) {
-            return new Day(in);
-        }
-        @Override
-        public Day[] newArray(int size) {
-            return new Day[size];
-        }
-    };
-
     public String getName(){
         return this.name;
     }
-    public void setBreakfastPoints(int breakfastPoints) {
+    public long getDId(){
+        return this.dId;
+    }
+    public void setDId(int DId){this.dId = DId;}
+    public void setOtherPoints(Integer otherPoints){this.otherPoints = otherPoints;}
+    public void setBeerCount(int beerCount){this.beerCount = beerCount;}
+    public void setDailyPoints(int dailyPoints){this.dailyPoints = dailyPoints;}
+
+    public void setBreakfastPoints(Integer breakfastPoints) {
         this.breakfastPoints = breakfastPoints;
     }
+    public int getDailyPoints(){return this.dailyPoints;}
     public Integer getBreakfastPoints(){
         return this.breakfastPoints;
     }
-    public void setLunchPoints(int lunchPoints){
+    public void setLunchPoints(Integer lunchPoints){
         this.lunchPoints = lunchPoints;
     }
     public Integer getLunchPoints(){
         return this.lunchPoints;
     }
-    public void setDinnerPoints(int dinnerPoints){
+    public void setDinnerPoints(Integer dinnerPoints){
         this.dinnerPoints = dinnerPoints;
     }
     public Integer getDinnerPoints(){
@@ -86,7 +88,7 @@ public class Day implements Parcelable {
         }
         return total;
     }
-    public int getRemainingPoints(){
+    public Integer getRemainingPoints(){
         return dailyPoints - getTotalPoints();
     }
     public int getBeerCount(){
@@ -111,20 +113,6 @@ public class Day implements Parcelable {
     }
     public boolean hasOtherPoints(){
         return otherPoints != null;
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(breakfastPoints);
-        dest.writeInt(lunchPoints);
-        dest.writeInt(dinnerPoints);
-        dest.writeInt(otherPoints);
-        dest.writeString(name);
     }
 }
 

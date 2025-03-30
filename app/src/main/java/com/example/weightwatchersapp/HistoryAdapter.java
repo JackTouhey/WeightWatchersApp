@@ -1,6 +1,6 @@
 package com.example.weightwatchersapp;
 
-import android.util.Log;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +12,12 @@ import java.util.Collections;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
     private ArrayList<Day> history;
+    private AppDatabase db;
+    private Activity activity;
 
-    public HistoryAdapter(ArrayList<Day> history) {
+    public HistoryAdapter(ArrayList<Day> history, Activity activity) {
+        this.activity = activity;
+        db = AppDatabase.getDatabase(activity);
         this.history = new ArrayList<>(history);
         Collections.reverse(this.history);
     }
@@ -28,34 +32,40 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     @Override
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
-        Day currentDay = history.get(position);
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            long dId = (long)(history.size() - position);
+            Day currentDay = db.dayDao().getDayById(dId);
 
-        holder.currentDayDisplay.setText(currentDay.getName());
-        holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
-        if(currentDay.getBreakfastPoints() != null){
-            holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
-        }
-        else{
-            holder.breakfastPointsDisplay.setText("Not Entered");
-        }
-        if(currentDay.getLunchPoints() != null){
-            holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-        }
-        else{
-            holder.lunchPointsDisplay.setText("Not Entered");
-        }
-        if(currentDay.getDinnerPoints() != null){
-            holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-        }
-        else{
-            holder.dinnerPointsDisplay.setText("Not Entered");
-        }
-        if(currentDay.getOtherPoints() != null){
-            holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
-        }
-        else{
-            holder.otherPointsDisplay.setText("Not Entered");
-        }
+            activity.runOnUiThread(() ->{
+                holder.currentDayDisplay.setText(currentDay.getName());
+                holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
+                holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
+                if(currentDay.getBreakfastPoints() != null){
+                    holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
+                }
+                else{
+                    holder.breakfastPointsDisplay.setText("Not Entered");
+                }
+                if(currentDay.getLunchPoints() != null){
+                    holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+                }
+                else{
+                    holder.lunchPointsDisplay.setText("Not Entered");
+                }
+                if(currentDay.getDinnerPoints() != null){
+                    holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+                }
+                else{
+                    holder.dinnerPointsDisplay.setText("Not Entered");
+                }
+                if(currentDay.getOtherPoints() != null){
+                    holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+                }
+                else{
+                    holder.otherPointsDisplay.setText("Not Entered");
+                }
+            });
+        });
     }
 
     @Override
@@ -65,6 +75,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
 
     static class HistoryViewHolder extends RecyclerView.ViewHolder {
         TextView currentDayDisplay;
+        TextView dayIdDisplay;
         TextView dailyPointsDisplay;
         TextView breakfastPointsDisplay;
         TextView lunchPointsDisplay;
@@ -74,6 +85,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
             currentDayDisplay = itemView.findViewById(R.id.currentDayDisplay);
+            dayIdDisplay = itemView.findViewById(R.id.dayIdDisplay);
             dailyPointsDisplay = itemView.findViewById(R.id.dailyPointsDisplay);
             breakfastPointsDisplay = itemView.findViewById(R.id.breakfastPointsDisplay);
             lunchPointsDisplay = itemView.findViewById(R.id.lunchPointsDisplay);
