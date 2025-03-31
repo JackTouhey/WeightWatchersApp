@@ -27,9 +27,12 @@ public class Day  {
     private int beerCount = 0;
     @ColumnInfo(name = "daily_points")
     private int dailyPoints = 28;
+    @ColumnInfo(name = "week")
+    private Week week;
 
-    public Day(String name){
+    public Day(String name, Week week){
         this.name = name;
+        this.week = week;
     }
     public String getName(){
         return this.name;

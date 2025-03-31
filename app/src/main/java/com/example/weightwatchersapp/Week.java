@@ -32,7 +32,7 @@ public class Week {
     private int weeklyPointStart;
     private int dailyLimit = 28;
     public Week(int weeklyPointStart){
-        monday = new Day("Monday");
+        monday = new Day("Monday", this);
         this.weeklyPoints = weeklyPointStart;
         this.weeklyPointStart = weeklyPointStart;
     }
@@ -60,7 +60,6 @@ public class Week {
     public void setSunday(Day sunday){this.sunday = sunday;}
     public void setDailyLimit(int dailyLimit){this.dailyLimit = dailyLimit;}
     public void setWeeklyPoints(int weeklyPoints){this.weeklyPoints = weeklyPoints;}
-
     public ArrayList<Day> getHistory(){
         ArrayList<Day> history = new ArrayList<>();
         if(monday != null){
@@ -107,15 +106,9 @@ public class Week {
     public int getWeeklyPoints(){
         return this.weeklyPoints;
     }
-    public int getWeeklyPointsAtMonday(){
-        return addDPtoWP(monday.getTotalPoints(), weeklyPointStart);
-    }
-    public int getWeeklyPointsAtTuesday(){
-        return addDPtoWP(tuesday.getTotalPoints(), getWeeklyPointsAtMonday());
-    }
-    public int getWeeklyPointsAtWednesday(){
-        return addDPtoWP(wednesday.getTotalPoints(), getWeeklyPointsAtTuesday());
-    }
+    public int getWeeklyPointsAtMonday(){return addDPtoWP(monday.getTotalPoints(), weeklyPointStart);}
+    public int getWeeklyPointsAtTuesday(){return addDPtoWP(tuesday.getTotalPoints(), getWeeklyPointsAtMonday());}
+    public int getWeeklyPointsAtWednesday(){return addDPtoWP(wednesday.getTotalPoints(), getWeeklyPointsAtTuesday());}
     public int getWeeklyPointsAtThursday(){ return addDPtoWP(thursday.getTotalPoints(), getWeeklyPointsAtWednesday());}
     public int getWeeklyPointsAtFriday(){return addDPtoWP(friday.getTotalPoints(), getWeeklyPointsAtThursday());}
     public int getWeeklyPointsAtSaturday(){return addDPtoWP(saturday.getTotalPoints(), getWeeklyPointsAtFriday());}
@@ -133,17 +126,17 @@ public class Week {
     private void createNextDay(){
         Day currentDay = getCurrentDay();
         if(currentDay == monday){
-            tuesday = new Day("Tuesday");
+            tuesday = new Day("Tuesday", this);
         }else if(currentDay == tuesday){
-            wednesday = new Day("Wednesday");
+            wednesday = new Day("Wednesday", this);
         }else if(currentDay == wednesday){
-            thursday = new Day("Thursday");
+            thursday = new Day("Thursday", this);
         }else if(currentDay == thursday){
-            friday = new Day("Friday");
+            friday = new Day("Friday", this);
         }else if(currentDay == friday){
-            saturday = new Day("Saturday");
+            saturday = new Day("Saturday", this);
         }else if(currentDay == saturday){
-            sunday = new Day("Sunday");
+            sunday = new Day("Sunday", this);
         }
     }
     public void completeDay() {

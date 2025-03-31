@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {Day.class, Week.class}, version = 2)
-@TypeConverters({JSONConverter.class})
+@TypeConverters({JSONConverter.class, weekJSONConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DayDao dayDao();
     public abstract WeekDao weekDao();
