@@ -28,15 +28,19 @@ public class Week {
     @ColumnInfo(name = "sunday")
     private Day sunday;
     @ColumnInfo(name = "weekly_points")
-    private int weeklyPoints = 40;
+    private int weeklyPoints;
+    private int weeklyPointStart;
     private int dailyLimit = 28;
-    public Week(){
+    public Week(int weeklyPointStart){
         monday = new Day("Monday");
+        this.weeklyPoints = weeklyPointStart;
+        this.weeklyPointStart = weeklyPointStart;
     }
     public int getWeekId(){
         return this.wId;
     }
-
+    public int getWeeklyPointStart(){return this.weeklyPointStart;}
+    public void setWeeklyPointStart(int weeklyPointStart){this.weeklyPointStart = weeklyPointStart;}
     public int getWId(){return this.wId;}
     public Day getMonday(){return this.monday;}
     public Day getTuesday(){return this.tuesday;}
@@ -102,6 +106,29 @@ public class Week {
     }
     public int getWeeklyPoints(){
         return this.weeklyPoints;
+    }
+    public int getWeeklyPointsAtMonday(){
+        return addDPtoWP(monday.getTotalPoints(), weeklyPointStart);
+    }
+    public int getWeeklyPointsAtTuesday(){
+        return addDPtoWP(tuesday.getTotalPoints(), getWeeklyPointsAtMonday());
+    }
+    public int getWeeklyPointsAtWednesday(){
+        return addDPtoWP(wednesday.getTotalPoints(), getWeeklyPointsAtTuesday());
+    }
+    public int getWeeklyPointsAtThursday(){ return addDPtoWP(thursday.getTotalPoints(), getWeeklyPointsAtWednesday());}
+    public int getWeeklyPointsAtFriday(){return addDPtoWP(friday.getTotalPoints(), getWeeklyPointsAtThursday());}
+    public int getWeeklyPointsAtSaturday(){return addDPtoWP(saturday.getTotalPoints(), getWeeklyPointsAtFriday());}
+    public int getWeeklyPointsAtSunday(){return addDPtoWP(sunday.getTotalPoints(), getWeeklyPointsAtSaturday());}
+    private int addDPtoWP(int dp, int wp){
+        int dailyPointsDifference = dailyLimit - dp;
+        if(dailyPointsDifference >= 4){
+            wp += 4;
+        }
+        else{
+            wp += dailyPointsDifference;
+        }
+        return wp;
     }
     private void createNextDay(){
         Day currentDay = getCurrentDay();

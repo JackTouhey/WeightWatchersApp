@@ -18,6 +18,7 @@ public class Controller {
     private long currentDayId;
     private Week currentWeek;
     private long currentWeekId;
+    private int weeklyPointStart;
     private ArrayList<Day> history = new ArrayList<>();
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
