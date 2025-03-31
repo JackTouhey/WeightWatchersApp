@@ -1,6 +1,7 @@
 package com.example.weightwatchersapp;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,12 +35,17 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
         AppDatabase.getDatabaseExecutor().execute(() ->{
             long dId = (long)(history.size() - position);
+            Log.d("DEBUG", "dId: " + dId);
             Day currentDay = db.dayDao().getDayById(dId);
-
+            Log.d("DEBUG", "Current Day Week ID: " + currentDay.getWeekId());
+            Week currentWeek = db.weekDao().getWeekById(currentDay.getWeekId());
             activity.runOnUiThread(() ->{
                 holder.currentDayDisplay.setText(currentDay.getName());
                 holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
                 holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
+                Log.d("DEBUG", "currentDayName: " + currentDay.getName());
+                Log.d("DEBUG", "currentWeekId: " + currentWeek.getWId());
+                holder.weeklyPointsDisplay.setText(String.valueOf(currentWeek.getWeeklyPointsAtDay(currentDay.getName())));
                 if(currentDay.getBreakfastPoints() != null){
                     holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                 }
@@ -81,6 +87,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         TextView lunchPointsDisplay;
         TextView dinnerPointsDisplay;
         TextView otherPointsDisplay;
+        TextView weeklyPointsDisplay;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,6 +98,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             lunchPointsDisplay = itemView.findViewById(R.id.lunchPointsDisplay);
             dinnerPointsDisplay = itemView.findViewById(R.id.dinnerPointsDisplay);
             otherPointsDisplay = itemView.findViewById(R.id.otherPointsDisplay);
+            weeklyPointsDisplay = itemView.findViewById(R.id.weeklyPointsDisplay);
         }
     }
 }

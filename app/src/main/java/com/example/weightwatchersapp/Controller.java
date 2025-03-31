@@ -18,7 +18,7 @@ public class Controller {
     private long currentDayId;
     private Week currentWeek;
     private long currentWeekId;
-    private int weeklyPointStart;
+    private int weeklyPointStart = 40;
     private ArrayList<Day> history = new ArrayList<>();
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
@@ -47,13 +47,19 @@ public class Controller {
         AppDatabase.getDatabaseExecutor().execute(() ->{
             currentDayId = db.dayDao().getCurrentDId();
             if(currentDayId == 0){
-                currentWeek = new Week();
-                currentDay = currentWeek.getCurrentDay();
+                currentWeek = new Week(weeklyPointStart);
+                //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0
                 currentWeekId = db.weekDao().insert(currentWeek);
+                Log.d("DEBUG", "making fresh week, currentWeekId from currentWeek: " + currentWeek.getWId() + " currentWeekId: " + currentWeekId);
+                currentWeek.setWId(currentWeekId);
+                currentWeek.makeMonday();
+                db.weekDao().update(currentWeek);
+                currentDay = currentWeek.getCurrentDay();
                 currentDayId = db.dayDao().insert(currentDay);
             }
             else{
                 currentWeekId = db.weekDao().getCurrentWId();
+                Log.d("DEBUG", "Starting w/ data, currentWeekId: " + currentWeekId);
                 currentDay = db.dayDao().getDayById(currentDayId);
                 currentWeek = db.weekDao().getWeekById(currentWeekId);
             }
@@ -92,7 +98,7 @@ public class Controller {
             db.weekDao().update(week);
 
             if(isSunday()){
-                currentWeek = new Week();
+                currentWeek = new Week(weeklyPointStart);
                 currentWeekId = db.weekDao().insert(currentWeek);
             }
             week = db.weekDao().getWeekById(currentWeekId);
