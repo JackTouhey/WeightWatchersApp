@@ -154,6 +154,7 @@ public class Controller {
             });
         });
     }
+    //some change
     private void setupDayViewButtons(){
         breakfastPointsInput = this.activity.findViewById(R.id.breakfastPointInput);
         lunchPointsInput = this.activity.findViewById(R.id.lunchPointInput);
