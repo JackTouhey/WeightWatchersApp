@@ -48,9 +48,8 @@ public class Controller {
             currentDayId = db.dayDao().getCurrentDId();
             if(currentDayId == 0){
                 currentWeek = new Week(weeklyPointStart);
-                //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0
+                //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
                 currentWeekId = db.weekDao().insert(currentWeek);
-                Log.d("DEBUG", "making fresh week, currentWeekId from currentWeek: " + currentWeek.getWId() + " currentWeekId: " + currentWeekId);
                 currentWeek.setWId(currentWeekId);
                 currentWeek.makeMonday();
                 db.weekDao().update(currentWeek);
@@ -59,11 +58,9 @@ public class Controller {
             }
             else{
                 currentWeekId = db.weekDao().getCurrentWId();
-                Log.d("DEBUG", "Starting w/ data, currentWeekId: " + currentWeekId);
                 currentDay = db.dayDao().getDayById(currentDayId);
                 currentWeek = db.weekDao().getWeekById(currentWeekId);
             }
-            Log.d("DEBUG", "CurrentDId: " + currentDayId);
             activity.runOnUiThread(this::setupDayView);
         });
     }
@@ -94,16 +91,22 @@ public class Controller {
     private void nextDay(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
             Week week = db.weekDao().getWeekById(currentWeekId);
+            boolean wasSunday = isSunday();
             week.completeDay();
             db.weekDao().update(week);
-
-            if(isSunday()){
-                currentWeek = new Week(weeklyPointStart);
-                currentWeekId = db.weekDao().insert(currentWeek);
+            if(wasSunday){
+                Log.d("DEBUG", "ENTERED WASSUNDAY()");
+                week = new Week(weeklyPointStart);
+                //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
+                currentWeekId = db.weekDao().insert(week);
+                Log.d("DEBUG", "currentWeekId: " + currentWeekId);
+                week.makeMonday();
+                db.weekDao().update(week);
+                currentWeek = week;
             }
-            week = db.weekDao().getWeekById(currentWeekId);
             currentDay = week.getCurrentDay();
             currentDayId = db.dayDao().insert(currentDay);
+            Log.d("DEBUG", "pre UpdateDisplayValues. currentWeekId: " + currentWeekId + " currentDayId: " + currentDayId + " CurrentDayName: " + currentDay.getName());
             updateDisplayValues();
         });
     }

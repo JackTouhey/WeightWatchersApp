@@ -37,8 +37,8 @@ public class Week {
         this.weeklyPointStart = weeklyPointStart;
     }
     public void makeMonday(){
-        Log.d("DEBUG,", "Making Monday, current wId: " + this.wId);
-        monday = new Day("Monday", this.wId);
+        this.monday = new Day("Monday", this.wId);
+        Log.d("DEBUG", "Monday Made, object: " + this.monday);
     }
     public int getWeeklyPointStart(){return this.weeklyPointStart;}
     public void setWeeklyPointStart(int weeklyPointStart){this.weeklyPointStart = weeklyPointStart;}
@@ -86,24 +86,6 @@ public class Week {
         }
         return history;
     }
-
-    public Day getCurrentDay(){
-        if(sunday != null){
-            return sunday;
-        }else if(saturday != null){
-            return saturday;
-        }else if(friday != null){
-            return friday;
-        }else if(thursday != null){
-            return thursday;
-        }else if(wednesday != null){
-            return wednesday;
-        }else if(tuesday != null){
-            return tuesday;
-        }else{
-            return monday;
-        }
-    }
     public int getWeeklyPoints(){
         return this.weeklyPoints;
     }
@@ -116,7 +98,6 @@ public class Week {
     public int getWeeklyPointsAtSunday(){return addDPtoWP(sunday.getTotalPoints(), getWeeklyPointsAtSaturday());}
     public int getWeeklyPointsAtDay(String name) {
         int weeklyPoints = weeklyPointStart;
-        Log.d("DEBUG", "name: " + name);
         switch (name){
             case "Monday":
                 weeklyPoints =  getWeeklyPointsAtMonday();
@@ -144,7 +125,7 @@ public class Week {
     }
     private int addDPtoWP(int dp, int wp){
         int dailyPointsDifference = dailyLimit - dp;
-        if(dailyPointsDifference >= 4){
+        if(dailyPointsDifference >= 4 ){
             wp += 4;
         }
         else{
@@ -152,10 +133,28 @@ public class Week {
         }
         return wp;
     }
+    public Day getCurrentDay(){
+        if(sunday != null){
+            return sunday;
+        }else if(saturday != null){
+            return saturday;
+        }else if(friday != null){
+            return friday;
+        }else if(thursday != null){
+            return thursday;
+        }else if(wednesday != null){
+            return wednesday;
+        }else if(tuesday != null){
+            return tuesday;
+        }else{
+            return this.monday;
+        }
+    }
     private void createNextDay(){
         Day currentDay = getCurrentDay();
         if(currentDay == monday){
             tuesday = new Day("Tuesday", this.wId);
+            Log.d("DEBUG", "Tuesday Created");
         }else if(currentDay == tuesday){
             wednesday = new Day("Wednesday", this.wId);
         }else if(currentDay == wednesday){
@@ -169,7 +168,9 @@ public class Week {
         }
     }
     public void completeDay() {
+        Log.d("DEBUG", "completeDay entered. Current WeekId: " + this.wId + "Current day: " + getCurrentDay().getName());
         int dayPointDifference = dailyLimit - getCurrentDay().getTotalPoints();
+        Log.d("DEBUG", "Week: " + wId + " currentDay: " + getCurrentDay().getName() + " dayPointDifference: " + dayPointDifference);
         if (dayPointDifference < 0) {
             weeklyPoints += dayPointDifference;
         } else if (dayPointDifference >= 4) {
