@@ -71,18 +71,6 @@ public class Controller {
             activity.runOnUiThread(this::setupDayView);
         });
     }
-    public ArrayList<Day> getHistory(){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            history = db.dayDao().getAll();
-        });
-        return history;
-    }
-    public Day getCurrentDay(){
-        return this.currentDay;
-    }
-    public Week getCurrentWeek() {
-        return currentWeek;
-    }
     private void nextDay(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
             completeDay();
