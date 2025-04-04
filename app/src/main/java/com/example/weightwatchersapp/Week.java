@@ -14,78 +14,50 @@ import java.util.ArrayList;
 public class Week {
     @PrimaryKey(autoGenerate = true)
     private long wId;
-    @ColumnInfo(name="monday")
-    private Day monday;
-    @ColumnInfo(name = "tuesday")
-    private Day tuesday;
-    @ColumnInfo(name = "wednesday")
-    private Day wednesday;
-    @ColumnInfo(name = "thursday")
-    private Day thursday;
-    @ColumnInfo(name = "friday")
-    private Day friday;
-    @ColumnInfo(name = "saturday")
-    private Day saturday;
-    @ColumnInfo(name = "sunday")
-    private Day sunday;
+    @ColumnInfo(name="mondayId")
+    private Long mondayId;
+    @ColumnInfo(name = "tuesdayId")
+    private Long tuesdayId;
+    @ColumnInfo(name = "wednesdayId")
+    private Long wednesdayId;
+    @ColumnInfo(name = "thursdayId")
+    private Long thursdayId;
+    @ColumnInfo(name = "fridayId")
+    private Long fridayId;
+    @ColumnInfo(name = "saturdayId")
+    private Long saturdayId;
+    @ColumnInfo(name = "sundayId")
+    private Long sundayId;
     @ColumnInfo(name = "weekly_points")
     private int weeklyPoints;
+    @ColumnInfo(name = "weekly_point_start")
     private int weeklyPointStart;
     private int dailyLimit = 28;
     public Week(int weeklyPointStart){
         this.weeklyPoints = weeklyPointStart;
         this.weeklyPointStart = weeklyPointStart;
     }
-    public void makeMonday(){
-        this.monday = new Day("Monday", this.wId);
-        Log.d("DEBUG", "Monday Made, object: " + this.monday);
-    }
     public int getWeeklyPointStart(){return this.weeklyPointStart;}
     public void setWeeklyPointStart(int weeklyPointStart){this.weeklyPointStart = weeklyPointStart;}
     public long getWId(){return this.wId;}
-    public Day getMonday(){return this.monday;}
-    public Day getTuesday(){return this.tuesday;}
-    public Day getWednesday(){return this.wednesday;}
-    public Day getThursday(){return this.thursday;}
-    public Day getFriday(){return this.friday;}
-    public Day getSaturday(){return this.saturday;}
-    public Day getSunday(){return this.sunday;}
+    public Long getMonday(){return this.mondayId;}
+    public Long getTuesday(){return this.tuesdayId;}
+    public Long getWednesday(){return this.wednesdayId;}
+    public Long getThursday(){return this.thursdayId;}
+    public Long getFriday(){return this.fridayId;}
+    public Long getSaturday(){return this.saturdayId;}
+    public Long getSunday(){return this.sundayId;}
     public int getDailyLimit(){return this.dailyLimit;}
     public void setWId(long wId){this.wId = wId;}
-    public void setMonday(Day monday){this.monday = monday;}
-    public void setTuesday(Day tuesday){this.tuesday = tuesday;}
-    public void setWednesday(Day wednesday){this.wednesday = wednesday;}
-    public void setThursday(Day thursday){this.thursday = thursday;}
-    public void setFriday(Day friday){this.friday = friday;}
-    public void setSaturday(Day saturday){this.saturday = saturday;}
-    public void setSunday(Day sunday){this.sunday = sunday;}
+    public void setMonday(Long monday){this.mondayId = monday;}
+    public void setTuesday(Long tuesday){this.tuesdayId = tuesday;}
+    public void setWednesday(Long wednesday){this.wednesdayId = wednesday;}
+    public void setThursday(Long thursday){this.thursdayId = thursday;}
+    public void setFriday(Long friday){this.fridayId = friday;}
+    public void setSaturday(Long saturday){this.saturdayId = saturday;}
+    public void setSunday(Long sunday){this.sundayId = sunday;}
     public void setDailyLimit(int dailyLimit){this.dailyLimit = dailyLimit;}
     public void setWeeklyPoints(int weeklyPoints){this.weeklyPoints = weeklyPoints;}
-    public ArrayList<Day> getHistory(){
-        ArrayList<Day> history = new ArrayList<>();
-        if(monday != null){
-            history.add(monday);
-        }
-        if(tuesday != null){
-            history.add(tuesday);
-        }
-        if(wednesday != null){
-            history.add(wednesday);
-        }
-        if(thursday != null){
-            history.add(thursday);
-        }
-        if(friday != null){
-            history.add(friday);
-        }
-        if(saturday != null){
-            history.add(saturday);
-        }
-        if(sunday != null){
-            history.add(sunday);
-        }
-        return history;
-    }
     public int getWeeklyPoints(){
         return this.weeklyPoints;
     }
@@ -133,21 +105,21 @@ public class Week {
         }
         return wp;
     }
-    public Day getCurrentDay(){
-        if(sunday != null){
-            return sunday;
-        }else if(saturday != null){
-            return saturday;
-        }else if(friday != null){
-            return friday;
-        }else if(thursday != null){
-            return thursday;
-        }else if(wednesday != null){
-            return wednesday;
-        }else if(tuesday != null){
-            return tuesday;
+    public Integer getCurrentDayId(){
+        if(sundayId != null){
+            return sundayId;
+        }else if(saturdayId != null){
+            return saturdayId;
+        }else if(fridayId != null){
+            return fridayId;
+        }else if(thursdayId != null){
+            return thursdayId;
+        }else if(wednesdayId != null){
+            return wednesdayId;
+        }else if(tuesdayId != null){
+            return tuesdayId;
         }else{
-            return this.monday;
+            return this.mondayId;
         }
     }
     private void createNextDay(){

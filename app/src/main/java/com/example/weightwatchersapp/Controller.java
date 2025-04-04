@@ -64,18 +64,6 @@ public class Controller {
             activity.runOnUiThread(this::setupDayView);
         });
     }
-    public Controller(Activity activity, long currentDayId, long currentWeekId){
-        this.activity = activity;
-        this.db = AppDatabase.getDatabase(this.activity);
-        this.currentDayId = currentDayId;
-        this.currentWeekId = currentWeekId;
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            this.currentDay = db.dayDao().getDayById(currentDayId);
-            this.currentWeek = db.weekDao().getWeekById(currentWeekId);
-
-            activity.runOnUiThread(this::setupDayView);
-        });
-    }
     public ArrayList<Day> getHistory(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
             history = db.dayDao().getAll();
