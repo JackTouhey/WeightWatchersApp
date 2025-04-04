@@ -15,9 +15,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     private ArrayList<Day> history;
     private AppDatabase db;
     private Activity activity;
+    private Controller controller;
 
-    public HistoryAdapter(ArrayList<Day> history, Activity activity) {
+    public HistoryAdapter(ArrayList<Day> history, Activity activity, Controller controller) {
         this.activity = activity;
+        this.controller = controller;
         db = AppDatabase.getDatabase(activity);
         this.history = new ArrayList<>(history);
         Collections.reverse(this.history);
@@ -45,7 +47,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
                 Log.d("DEBUG", "currentDayName: " + currentDay.getName());
                 Log.d("DEBUG", "currentWeekId: " + currentWeek.getWId());
-                holder.weeklyPointsDisplay.setText(String.valueOf(currentWeek.getWeeklyPointsAtDay(currentDay.getName())));
+                holder.weeklyPointsDisplay.setText(String.valueOf(controller.getWeeklyPointsAtDay(currentDay.getName(), currentWeek)));
                 if(currentDay.getBreakfastPoints() != null){
                     holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                 }

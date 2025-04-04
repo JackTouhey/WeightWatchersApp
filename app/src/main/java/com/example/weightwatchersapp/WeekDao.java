@@ -18,7 +18,7 @@ public interface WeekDao {
         List<Week> weekList = getAllWeeks();
         return new ArrayList<Week>(weekList);
     }
-    default Long getCurrentDayFromWeekId(Long weekId){
+    default Long getCurrentDayIdFromWeekId(Long weekId){
         if(getSundayIdFromWeekId(weekId) != null ){
             return getSundayIdFromWeekId(weekId);
         }
