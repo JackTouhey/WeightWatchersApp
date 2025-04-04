@@ -18,24 +18,47 @@ public interface WeekDao {
         List<Week> weekList = getAllWeeks();
         return new ArrayList<Week>(weekList);
     }
+    default Long getCurrentDayFromWeekId(Long weekId){
+        if(getSundayIdFromWeekId(weekId) != null ){
+            return getSundayIdFromWeekId(weekId);
+        }
+        else if(getSaturdayIdFromWeekId(weekId) != null){
+            return getSaturdayIdFromWeekId(weekId);
+        }
+        else if(getFridayIdFromWeekId(weekId) != null){
+            return getFridayIdFromWeekId(weekId);
+        }
+        else if(getThursdayIdFromWeekId(weekId) != null){
+            return getThursdayIdFromWeekId(weekId);
+        }
+        else if(getWednesdayIdFromWeekId(weekId) != null){
+            return getWednesdayIdFromWeekId(weekId);
+        }
+        else if(getTuesdayIdFromWeekId(weekId) != null){
+            return getTuesdayIdFromWeekId(weekId);
+        }
+        else{
+            return getMondayIdFromWeekId(weekId);
+        }
+    }
     @Query("SELECT * FROM Weeks WHERE wId = :weekId")
     Week getWeekById(long weekId);
     @Query("SELECT MAX(wId) FROM Weeks")
     long getCurrentWId();
     @Query("SELECT DISTINCT mondayId FROM Weeks WHERE wId = :weekId")
-    Long getMondayIdFromWeek(long weekId);
+    Long getMondayIdFromWeekId(Long weekId);
     @Query("SELECT DISTINCT tuesdayId FROM Weeks WHERE wId = :weekId")
-    Long getTuesdayIdFromWeek(long weekId);
+    Long getTuesdayIdFromWeekId(Long weekId);
     @Query("SELECT DISTINCT wednesdayId FROM Weeks WHERE wId = :weekId")
-    Long getWednesdayIdFromWeek(long weekId);
+    Long getWednesdayIdFromWeekId(Long weekId);
     @Query("SELECT DISTINCT thursdayId FROM Weeks WHERE wId = :weekId")
-    Long getThursdayIdFromWeek(long weekId);
+    Long getThursdayIdFromWeekId(Long weekId);
     @Query("SELECT DISTINCT fridayId FROM Weeks WHERE wId = :weekId")
-    Long getFridayIdFromWeek(long weekId);
+    Long getFridayIdFromWeekId(Long weekId);
     @Query("SELECT DISTINCT saturdayId FROM Weeks WHERE wId = :weekId")
-    Long getSaturdayIdFromWeek(long weekId);
+    Long getSaturdayIdFromWeekId(Long weekId);
     @Query("SELECT DISTINCT sundayId FROM Weeks WHERE wId = :weekId")
-    Long getSundayIdFromWeek(long weekId);
+    Long getSundayIdFromWeekId(Long weekId);
     @Insert
     long insert(Week week);
     @Update

@@ -51,10 +51,10 @@ public class Controller {
                 //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
                 currentWeekId = db.weekDao().insert(currentWeek);
                 currentWeek.setWId(currentWeekId);
-                currentWeek.makeMonday();
-                db.weekDao().update(currentWeek);
-                currentDay = currentWeek.getCurrentDay();
+                currentDay = new Day("Monday", currentWeekId);
                 currentDayId = db.dayDao().insert(currentDay);
+                currentWeek.setMonday(currentDayId);
+                db.weekDao().update(currentWeek);
             }
             else{
                 currentWeekId = db.weekDao().getCurrentWId();
@@ -98,6 +98,75 @@ public class Controller {
             updateDisplayValues();
         });
     }
+    private void completeDay(){
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            Week week = db.weekDao().getWeekById(currentWeekId);
+            Day day = db.dayDao().getDayById(currentDayId);
+
+            int dayPointDifference = week.getDailyLimit() - day.getTotalPoints();
+            if(dayPointDifference >= 4){
+                week.setWeeklyPoints(week.getWeeklyPoints() + 4);
+            }
+            else{
+                week.setWeeklyPoints((week.getWeeklyPoints() + dayPointDifference));
+            }
+            createNextDay();
+        });
+    }
+    private void createNextDay(){
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            Day day = db.dayDao().getDayById(currentDayId);
+            Week week = db.weekDao().getWeekById(currentWeekId);
+            Day newDay;
+            Boolean wasSunday = false;
+            switch (day.getName()) {
+                case "Monday":
+                    newDay = new Day("Tuesday", currentWeekId);
+                    week.setTuesday(db.dayDao().insert(newDay));
+                    break;
+                case "Tuesday":
+                    newDay = new Day("Wednesday", currentWeekId);
+                    week.setWednesday(db.dayDao().insert(newDay));
+                    break;
+                case "Wednesday":
+                    newDay = new Day("Thursday", currentWeekId);
+                    week.setThursday(db.dayDao().insert(newDay));
+                    break;
+                case "Thursday":
+                    newDay = new Day("Friday", currentWeekId);
+                    week.setFriday(db.dayDao().insert(newDay));
+                    break;
+                case "Friday":
+                    newDay = new Day("Saturday", currentWeekId);
+                    week.setSaturday(db.dayDao().insert(newDay));
+                    break;
+                case "Saturday":
+                    newDay = new Day("Sunday", currentWeekId);
+                    week.setSunday(db.dayDao().insert(newDay));
+                    break;
+                case "Sunday":
+                    week = createNextWeek();
+                    currentWeekId = db.weekDao().insert(week);
+                    newDay = new Day("Monday", currentWeekId);
+                    week.setMonday(db.dayDao().insert(newDay));
+                    db.weekDao().update(week);
+                    wasSunday = true;
+                    break;
+            }
+
+            if(wasSunday){
+
+            }else{
+                week.
+            }
+
+        });
+    }
+
+    private Week createNextWeek(){
+        return new Week(weeklyPointStart);
+    }
+
     public boolean isSunday(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
             currentDay = db.dayDao().getDayById(currentDayId);
