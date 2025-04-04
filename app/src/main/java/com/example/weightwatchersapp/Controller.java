@@ -1,6 +1,8 @@
 package com.example.weightwatchersapp;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
+
 import android.app.Activity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -54,13 +56,12 @@ public class Controller {
         AppDatabase.getDatabaseExecutor().execute(() ->{
             currentDayId = db.dayDao().getCurrentDId();
             if(currentDayId == 0){
-                currentWeek = new Week(weeklyPointStart);
+                currentDay = new Day("Monday", currentWeekId + 1);
+                currentDayId = db.dayDao().insert(currentDay);
+                currentWeek = new Week(weeklyPointStart, currentDayId);
                 //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
                 currentWeekId = db.weekDao().insert(currentWeek);
                 currentWeek.setWId(currentWeekId);
-                currentDay = new Day("Monday", currentWeekId);
-                currentDayId = db.dayDao().insert(currentDay);
-                currentWeek.setMondayId(currentDayId);
                 db.weekDao().update(currentWeek);
             }
             else{
@@ -71,72 +72,82 @@ public class Controller {
             activity.runOnUiThread(this::setupDayView);
         });
     }
-    private void nextDay(){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            completeDay();
-            Week week = db.weekDao().getWeekById(currentWeekId);
-            updateDisplayValues();
-        });
-    }
-    private void completeDay(){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            Week week = db.weekDao().getWeekById(currentWeekId);
-            Day day = db.dayDao().getDayById(currentDayId);
+    private void completeDay(CountDownLatch outerLatch) {
+        AppDatabase.getDatabaseExecutor().execute(() -> {
+            try {
+                Week week = db.weekDao().getWeekById(currentWeekId);
+                Day day = db.dayDao().getDayById(currentDayId);
 
-            int dayPointDifference = week.getDailyLimit() - day.getTotalPoints();
-            if(dayPointDifference >= 4){
-                week.setWeeklyPoints(week.getWeeklyPoints() + 4);
+                int dayPointDifference = week.getDailyLimit() - day.getTotalPoints();
+                if (dayPointDifference >= 4) {
+                    week.setWeeklyPoints(week.getWeeklyPoints() + 4);
+                } else {
+                    week.setWeeklyPoints((week.getWeeklyPoints() + dayPointDifference));
+                }
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                createNextDay(innerLatch);
+                try {
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting for createNextDay interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            } finally {
+                outerLatch.countDown();
             }
-            else{
-                week.setWeeklyPoints((week.getWeeklyPoints() + dayPointDifference));
-            }
-            createNextDay();
         });
     }
-    private void createNextDay(){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            Day day = db.dayDao().getDayById(currentDayId);
-            Week week = db.weekDao().getWeekById(currentWeekId);
-            Day newDay;
-            switch (day.getName()) {
-                case "Monday":
-                    newDay = new Day("Tuesday", currentWeekId);
-                    week.setTuesdayId(db.dayDao().insert(newDay));
-                    break;
-                case "Tuesday":
-                    newDay = new Day("Wednesday", currentWeekId);
-                    week.setWednesdayId(db.dayDao().insert(newDay));
-                    break;
-                case "Wednesday":
-                    newDay = new Day("Thursday", currentWeekId);
-                    week.setThursdayId(db.dayDao().insert(newDay));
-                    break;
-                case "Thursday":
-                    newDay = new Day("Friday", currentWeekId);
-                    week.setFridayId(db.dayDao().insert(newDay));
-                    break;
-                case "Friday":
-                    newDay = new Day("Saturday", currentWeekId);
-                    week.setSaturdayId(db.dayDao().insert(newDay));
-                    break;
-                case "Saturday":
-                    newDay = new Day("Sunday", currentWeekId);
-                    week.setSundayId(db.dayDao().insert(newDay));
-                    break;
-                case "Sunday":
-                    week = createNextWeek();
-                    currentWeekId = db.weekDao().insert(week);
-                    newDay = new Day("Monday", currentWeekId);
-                    week.setMondayId(db.dayDao().insert(newDay));
-                    break;
+    private void createNextDay(CountDownLatch latch) {
+        AppDatabase.getDatabaseExecutor().execute(() -> {
+            try {
+                Day day = db.dayDao().getDayById(currentDayId);
+                Week week = db.weekDao().getWeekById(currentWeekId);
+                Day newDay;
+                switch (day.getName()) {
+                    case "Monday":
+                        newDay = new Day("Tuesday", currentWeekId);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week.setTuesdayId(currentDayId);
+                        break;
+                    case "Tuesday":
+                        newDay = new Day("Wednesday", currentWeekId);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week.setWednesdayId(currentDayId);
+                        break;
+                    case "Wednesday":
+                        newDay = new Day("Thursday", currentWeekId);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week.setThursdayId(currentDayId);
+                        break;
+                    case "Thursday":
+                        newDay = new Day("Friday", currentWeekId);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week.setFridayId(currentDayId);
+                        break;
+                    case "Friday":
+                        newDay = new Day("Saturday", currentWeekId);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week.setSaturdayId(currentDayId);
+                        break;
+                    case "Saturday":
+                        newDay = new Day("Sunday", currentWeekId);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week.setSundayId(currentDayId);
+                        break;
+                    case "Sunday":
+                        newDay = new Day("Monday", currentWeekId + 1);
+                        currentDayId = db.dayDao().insert(newDay);
+                        week = new Week(weeklyPointStart, currentDayId);
+                        currentWeekId = db.weekDao().insert(week);
+                        break;
+                }
+                db.weekDao().update(week);
+                Log.d("DEBUG", "currentDayId: " + currentDayId + " currentWeekId: " + currentWeekId);
+                Log.d("DEBUG", "Current dayId from weekId: " + db.weekDao().getCurrentDayIdFromWeekId(currentWeekId));
+            } finally {
+                latch.countDown();
             }
-            db.weekDao().update(week);
-            currentDayId = db.weekDao().getCurrentDayIdFromWeekId(currentWeekId);
         });
-    }
-
-    private Week createNextWeek(){
-        return new Week(weeklyPointStart);
     }
     private int getWeeklyPointsAtMonday(Week week){
         AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -395,8 +406,17 @@ public class Controller {
         }
     }
     private void onSubmitDayPress(){
-        nextDay();
-        updateDisplayValues();
+        CountDownLatch latch = new CountDownLatch(1);
+        completeDay(latch);
+        new Thread(() -> {
+            try {
+                latch.await();
+                updateDisplayValues();
+            } catch (InterruptedException e) {
+                Log.e("DayFragment", "Waiting interrupted", e);
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
     private void onAddBeerClick(){
         AppDatabase.getDatabaseExecutor().execute(() ->{

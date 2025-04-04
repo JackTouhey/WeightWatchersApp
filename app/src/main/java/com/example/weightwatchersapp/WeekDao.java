@@ -1,5 +1,7 @@
 package com.example.weightwatchersapp;
 
+import android.util.Log;
+
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -38,6 +40,7 @@ public interface WeekDao {
             return getTuesdayIdFromWeekId(weekId);
         }
         else{
+            Log.d("DEBUG", "Returning Monday ID, current value: " + getMondayIdFromWeekId(weekId) + " weekIdValue: " + weekId);
             return getMondayIdFromWeekId(weekId);
         }
     }

@@ -33,9 +33,10 @@ public class Week {
     @ColumnInfo(name = "weekly_point_start")
     private int weeklyPointStart;
     private int dailyLimit = 28;
-    public Week(int weeklyPointStart){
+    public Week(int weeklyPointStart, Long mondayId){
         this.weeklyPoints = weeklyPointStart;
         this.weeklyPointStart = weeklyPointStart;
+        this.mondayId = mondayId;
     }
     public int getWeeklyPointStart(){return this.weeklyPointStart;}
     public void setWeeklyPointStart(int weeklyPointStart){this.weeklyPointStart = weeklyPointStart;}
@@ -49,9 +50,11 @@ public class Week {
     public Long getSundayId(){return this.sundayId;}
     public int getDailyLimit(){return this.dailyLimit;}
     public void setWId(long wId){this.wId = wId;}
-    public void setMondayId(Long monday){this.mondayId = monday;}
-    public void setTuesdayId(Long tuesday){this.tuesdayId = tuesday;}
-    public void setWednesdayId(Long wednesday){this.wednesdayId = wednesday;}
+    public void setMondayId(Long mondayId){
+        Log.d("DEBUG", "Setting MondayId: " + mondayId);
+        this.mondayId = mondayId;}
+    public void setTuesdayId(Long tuesdayId){this.tuesdayId = tuesdayId;}
+    public void setWednesdayId(Long wednesdayId){this.wednesdayId = wednesdayId;}
     public void setThursdayId(Long thursday){this.thursdayId = thursday;}
     public void setFridayId(Long friday){this.fridayId = friday;}
     public void setSaturdayId(Long saturday){this.saturdayId = saturday;}
