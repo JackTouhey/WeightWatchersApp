@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.CountDownLatch;
 
 public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
     private ArrayList<Day> history;
@@ -41,39 +42,46 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             Day currentDay = db.dayDao().getDayById(dId);
             Log.d("DEBUG", "Current Day Week ID: " + currentDay.getWeekId());
             Week currentWeek = db.weekDao().getWeekById(currentDay.getWeekId());
-            int weeklyPoints = controller.getWeeklyPointsAtDay(currentDay.getName(), currentWeek);
-            activity.runOnUiThread(() ->{
-                holder.currentDayDisplay.setText(currentDay.getName());
-                holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
-                holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
-                Log.d("DEBUG", "currentDayName: " + currentDay.getName());
-                Log.d("DEBUG", "currentWeekId: " + currentWeek.getWId());
-                holder.weeklyPointsDisplay.setText(String.valueOf(weeklyPoints));
-                if(currentDay.getBreakfastPoints() != null){
-                    holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
-                }
-                else{
-                    holder.breakfastPointsDisplay.setText("Not Entered");
-                }
-                if(currentDay.getLunchPoints() != null){
-                    holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
-                }
-                else{
-                    holder.lunchPointsDisplay.setText("Not Entered");
-                }
-                if(currentDay.getDinnerPoints() != null){
-                    holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
-                }
-                else{
-                    holder.dinnerPointsDisplay.setText("Not Entered");
-                }
-                if(currentDay.getOtherPoints() != null){
-                    holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
-                }
-                else{
-                    holder.otherPointsDisplay.setText("Not Entered");
-                }
-            });
+            CountDownLatch latch = new CountDownLatch(1);
+            int weeklyPoints = controller.getWeeklyPointsAtDay(currentDay.getName(), currentWeek, latch);
+            try{
+                latch.await();
+                activity.runOnUiThread(() ->{
+                    holder.currentDayDisplay.setText(currentDay.getName());
+                    holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
+                    holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
+                    Log.d("DEBUG", "currentDayName: " + currentDay.getName());
+                    Log.d("DEBUG", "currentWeekId: " + currentWeek.getWId());
+                    holder.weeklyPointsDisplay.setText(String.valueOf(weeklyPoints));
+                    if(currentDay.getBreakfastPoints() != null){
+                        holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
+                    }
+                    else{
+                        holder.breakfastPointsDisplay.setText("Not Entered");
+                    }
+                    if(currentDay.getLunchPoints() != null){
+                        holder.lunchPointsDisplay.setText(String.valueOf(currentDay.getLunchPoints()));
+                    }
+                    else{
+                        holder.lunchPointsDisplay.setText("Not Entered");
+                    }
+                    if(currentDay.getDinnerPoints() != null){
+                        holder.dinnerPointsDisplay.setText(String.valueOf(currentDay.getDinnerPoints()));
+                    }
+                    else{
+                        holder.dinnerPointsDisplay.setText("Not Entered");
+                    }
+                    if(currentDay.getOtherPoints() != null){
+                        holder.otherPointsDisplay.setText(String.valueOf(currentDay.getOtherPoints()));
+                    }
+                    else{
+                        holder.otherPointsDisplay.setText("Not Entered");
+                    }
+                });
+            } catch (InterruptedException e) {
+                Log.e("DayFragment", "Waiting interrupted", e);
+                Thread.currentThread().interrupt();
+            }
         });
     }
 

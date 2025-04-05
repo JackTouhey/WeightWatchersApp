@@ -198,30 +198,34 @@ public class Controller {
         });
         return saturdayPoints;
     }
-    public int getWeeklyPointsAtDay(String name, Week week){
+    public int getWeeklyPointsAtDay(String name, Week week, CountDownLatch latch){
         int weeklyPoints = week.getWeeklyPointStart();
-        switch (name){
-            case "Monday":
-                weeklyPoints =  getWeeklyPointsAtMonday(week);
-                break;
-            case "Tuesday":
-                weeklyPoints = getWeeklyPointsAtTuesday(week);
-                break;
-            case "Wednesday":
-                weeklyPoints = getWeeklyPointsAtWednesday(week);
-                break;
-            case "Thursday":
-                weeklyPoints = getWeeklyPointsAtThursday(week);
-                break;
-            case "Friday":
-                weeklyPoints = getWeeklyPointsAtFriday(week);
-                break;
-            case "Saturday":
-                weeklyPoints = getWeeklyPointsAtSaturday(week);
-                break;
-            case "Sunday":
-                weeklyPoints = getWeeklyPointsAtSunday(week);
-                break;
+        try{
+            switch (name){
+                case "Monday":
+                    weeklyPoints =  getWeeklyPointsAtMonday(week);
+                    break;
+                case "Tuesday":
+                    weeklyPoints = getWeeklyPointsAtTuesday(week);
+                    break;
+                case "Wednesday":
+                    weeklyPoints = getWeeklyPointsAtWednesday(week);
+                    break;
+                case "Thursday":
+                    weeklyPoints = getWeeklyPointsAtThursday(week);
+                    break;
+                case "Friday":
+                    weeklyPoints = getWeeklyPointsAtFriday(week);
+                    break;
+                case "Saturday":
+                    weeklyPoints = getWeeklyPointsAtSaturday(week);
+                    break;
+                case "Sunday":
+                    weeklyPoints = getWeeklyPointsAtSunday(week);
+                    break;
+            }
+        } finally {
+            latch.countDown();
         }
         return weeklyPoints;
     }
