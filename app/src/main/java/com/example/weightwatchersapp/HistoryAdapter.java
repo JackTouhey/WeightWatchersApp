@@ -41,13 +41,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             Day currentDay = db.dayDao().getDayById(dId);
             Log.d("DEBUG", "Current Day Week ID: " + currentDay.getWeekId());
             Week currentWeek = db.weekDao().getWeekById(currentDay.getWeekId());
+            int weeklyPoints = controller.getWeeklyPointsAtDay(currentDay.getName(), currentWeek);
             activity.runOnUiThread(() ->{
                 holder.currentDayDisplay.setText(currentDay.getName());
                 holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
                 holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
                 Log.d("DEBUG", "currentDayName: " + currentDay.getName());
                 Log.d("DEBUG", "currentWeekId: " + currentWeek.getWId());
-                holder.weeklyPointsDisplay.setText(String.valueOf(controller.getWeeklyPointsAtDay(currentDay.getName(), currentWeek)));
+                holder.weeklyPointsDisplay.setText(String.valueOf(weeklyPoints));
                 if(currentDay.getBreakfastPoints() != null){
                     holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                 }
