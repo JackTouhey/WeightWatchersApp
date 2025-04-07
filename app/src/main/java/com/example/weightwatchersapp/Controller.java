@@ -84,6 +84,7 @@ public class Controller {
                 } else {
                     week.setWeeklyPoints((week.getWeeklyPoints() + dayPointDifference));
                 }
+                db.weekDao().update(week);
                 CountDownLatch innerLatch = new CountDownLatch(1);
                 createNextDay(innerLatch);
                 try {
@@ -149,79 +150,205 @@ public class Controller {
             }
         });
     }
-    private int getWeeklyPointsAtMonday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int mondayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getMondayIdFromWeekId(week.getWId()));
-            mondayPoints = addDptoWp(mondayDailyPoints, week.getWeeklyPointStart(), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtMonday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                int mondayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getMondayIdFromWeekId(week.getWId()));
+                mondayPoints = addDptoWp(mondayDailyPoints, week.getWeeklyPointStart(), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtMonday() dp: " + mondayDailyPoints + " wp: " + week.getWeeklyPointStart() + " calculatedWeeklyPoints: " + mondayPoints);
+            });
+        } finally {
+            latch.countDown();
+        }
         return mondayPoints;
     }
-    private int getWeeklyPointsAtTuesday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int tuesdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getTuesdayIdFromWeekId(week.getWId()));
-            tuesdayPoints = addDptoWp(tuesdayDailyPoints, getWeeklyPointsAtMonday(week), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtTuesday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                int tuesdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getTuesdayIdFromWeekId(week.getWId()));
+                tuesdayPoints = addDptoWp(tuesdayDailyPoints, getWeeklyPointsAtMonday(week, innerLatch), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtTuesday() dp: " + tuesdayDailyPoints  + " calculatedWeeklyPoints: " + tuesdayPoints);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } finally{
+            latch.countDown();
+        }
         return tuesdayPoints;
     }
-    private int getWeeklyPointsAtWednesday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int wednesdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getWednesdayIdFromWeekId(week.getWId()));
-            wednesdayPoints = addDptoWp(wednesdayDailyPoints, getWeeklyPointsAtTuesday(week), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtWednesday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                int wednesdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getWednesdayIdFromWeekId(week.getWId()));
+                wednesdayPoints = addDptoWp(wednesdayDailyPoints, getWeeklyPointsAtTuesday(week, innerLatch), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtWednesday() dp: " + wednesdayDailyPoints + " calculatedWeeklyPoints: " + wednesdayPoints);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } finally{
+            latch.countDown();
+        }
         return wednesdayPoints;
     }
-    private int getWeeklyPointsAtThursday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int thursdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getThursdayIdFromWeekId(week.getWId()));
-            thursdayPoints = addDptoWp(thursdayDailyPoints, getWeeklyPointsAtWednesday(week), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtThursday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                int thursdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getThursdayIdFromWeekId(week.getWId()));
+                thursdayPoints = addDptoWp(thursdayDailyPoints, getWeeklyPointsAtWednesday(week, innerLatch), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtThursday() dp: " + thursdayDailyPoints + " calculatedWeeklyPoints: " + thursdayPoints);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } finally{
+            latch.countDown();
+        }
         return thursdayPoints;
     }
-    private int getWeeklyPointsAtFriday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int fridayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getFridayIdFromWeekId(week.getWId()));
-            fridayPoints = addDptoWp(fridayDailyPoints, getWeeklyPointsAtThursday(week), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtFriday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                int fridayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getFridayIdFromWeekId(week.getWId()));
+                fridayPoints = addDptoWp(fridayDailyPoints, getWeeklyPointsAtThursday(week, innerLatch), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtFriday() dp: " + fridayDailyPoints + " calculatedWeeklyPoints: " + fridayPoints);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } finally{
+            latch.countDown();
+        }
         return fridayPoints;
     }
-    private int getWeeklyPointsAtSaturday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int saturdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getSaturdayIdFromWeekId(week.getWId()));
-            saturdayPoints = addDptoWp(saturdayDailyPoints, getWeeklyPointsAtFriday(week), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtSaturday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                int saturdayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getSaturdayIdFromWeekId(week.getWId()));
+                saturdayPoints = addDptoWp(saturdayDailyPoints, getWeeklyPointsAtFriday(week, innerLatch), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtSaturday() dp: " + saturdayDailyPoints + " calculatedWeeklyPoints: " + saturdayPoints);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } finally{
+            latch.countDown();
+        }
         return saturdayPoints;
     }
-    private int getWeeklyPointsAtSunday(Week week){
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            int sundayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getSundayIdFromWeekId(week.getWId()));
-            sundayPoints = addDptoWp(sundayDailyPoints, getWeeklyPointsAtSaturday(week), week.getDailyLimit());
-        });
+    private int getWeeklyPointsAtSunday(Week week, CountDownLatch latch){
+        try{
+            AppDatabase.getDatabaseExecutor().execute(() ->{
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                int sundayDailyPoints = db.dayDao().getTotalPoints(db.weekDao().getSundayIdFromWeekId(week.getWId()));
+                sundayPoints = addDptoWp(sundayDailyPoints, getWeeklyPointsAtSaturday(week, innerLatch), week.getDailyLimit());
+                Log.d("DEBUG", "getWeeklyPointsAtSunday() dp: " + sundayDailyPoints + " calculatedWeeklyPoints: " + sundayPoints);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            });
+        } finally{
+            latch.countDown();
+        }
         return saturdayPoints;
     }
     public int getWeeklyPointsAtDay(String name, Week week, CountDownLatch latch){
         int weeklyPoints = week.getWeeklyPointStart();
+        CountDownLatch innerLatch = new CountDownLatch(1);
         try{
             switch (name){
                 case "Monday":
-                    weeklyPoints =  getWeeklyPointsAtMonday(week);
-                    break;
+                    weeklyPoints =  getWeeklyPointsAtMonday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                 case "Tuesday":
-                    weeklyPoints = getWeeklyPointsAtTuesday(week);
+                    weeklyPoints = getWeeklyPointsAtTuesday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                     break;
                 case "Wednesday":
-                    weeklyPoints = getWeeklyPointsAtWednesday(week);
+                    weeklyPoints = getWeeklyPointsAtWednesday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                     break;
                 case "Thursday":
-                    weeklyPoints = getWeeklyPointsAtThursday(week);
+                    weeklyPoints = getWeeklyPointsAtThursday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                     break;
                 case "Friday":
-                    weeklyPoints = getWeeklyPointsAtFriday(week);
+                    weeklyPoints = getWeeklyPointsAtFriday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                     break;
                 case "Saturday":
-                    weeklyPoints = getWeeklyPointsAtSaturday(week);
+                    weeklyPoints = getWeeklyPointsAtSaturday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                     break;
                 case "Sunday":
-                    weeklyPoints = getWeeklyPointsAtSunday(week);
+                    weeklyPoints = getWeeklyPointsAtSunday(week, innerLatch);
+                    try{
+                        innerLatch.await();
+                        break;
+                    } catch (InterruptedException e) {
+                        Log.e("DayFragment", "Waiting interrupted", e);
+                        Thread.currentThread().interrupt();
+                    }
                     break;
             }
         } finally {
