@@ -20,48 +20,42 @@ public interface WeekDao {
         List<Week> weekList = getAllWeeks();
         return new ArrayList<Week>(weekList);
     }
-    default Long getCurrentDayIdFromWeekId(Long weekId){
-        if(getSundayIdFromWeekId(weekId) != null){
-            return getSundayIdFromWeekId(weekId);
-        }
-        else if(getSaturdayIdFromWeekId(weekId) != null){
-            return getSaturdayIdFromWeekId(weekId);
-        }
-        else if(getFridayIdFromWeekId(weekId) != null){
-            return getFridayIdFromWeekId(weekId);
-        }
-        else if(getThursdayIdFromWeekId(weekId) != null){
-            return getThursdayIdFromWeekId(weekId);
-        }
-        else if(getWednesdayIdFromWeekId(weekId) != null){
-            return getWednesdayIdFromWeekId(weekId);
-        }
-        else if(getTuesdayIdFromWeekId(weekId) != null){
-            return getTuesdayIdFromWeekId(weekId);
-        }
-        else{
-            Log.d("DEBUG", "Returning Monday ID, current value: " + getMondayIdFromWeekId(weekId) + " weekIdValue: " + weekId);
-            return getMondayIdFromWeekId(weekId);
+    default int getWeeklyPointsAtDay(Long weekId, String name){
+        switch (name){
+            case "Monday":
+                return getMondayWPFromWeekId(weekId);
+            case "Tuesday":
+                return getTuesdayWPFromWeekId(weekId);
+            case "Wednesday":
+                return getWednesdayWPFromWeekId(weekId);
+            case "Thursday":
+                return getThursdayWPFromWeekId(weekId);
+            case "Friday":
+                return getFridayWPFromWeekId(weekId);
+            case "Saturday":
+                return getSaturdayWPFromWeekId(weekId);
+            default:
+                return getSundayWPFromWeekId(weekId);
         }
     }
     @Query("SELECT * FROM Weeks WHERE wId = :weekId")
     Week getWeekById(long weekId);
     @Query("SELECT MAX(wId) FROM Weeks")
     long getCurrentWId();
-    @Query("SELECT DISTINCT mondayId FROM Weeks WHERE wId = :weekId")
-    Long getMondayIdFromWeekId(Long weekId);
-    @Query("SELECT DISTINCT tuesdayId FROM Weeks WHERE wId = :weekId")
-    Long getTuesdayIdFromWeekId(Long weekId);
-    @Query("SELECT DISTINCT wednesdayId FROM Weeks WHERE wId = :weekId")
-    Long getWednesdayIdFromWeekId(Long weekId);
-    @Query("SELECT DISTINCT thursdayId FROM Weeks WHERE wId = :weekId")
-    Long getThursdayIdFromWeekId(Long weekId);
-    @Query("SELECT DISTINCT fridayId FROM Weeks WHERE wId = :weekId")
-    Long getFridayIdFromWeekId(Long weekId);
-    @Query("SELECT DISTINCT saturdayId FROM Weeks WHERE wId = :weekId")
-    Long getSaturdayIdFromWeekId(Long weekId);
-    @Query("SELECT DISTINCT sundayId FROM Weeks WHERE wId = :weekId")
-    Long getSundayIdFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT mondayWP FROM Weeks WHERE wId = :weekId")
+    int getMondayWPFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT tuesdayWP FROM Weeks WHERE wId = :weekId")
+    int getTuesdayWPFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT wednesdayWP FROM Weeks WHERE wId = :weekId")
+    int getWednesdayWPFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT thursdayWP FROM Weeks WHERE wId = :weekId")
+    int getThursdayWPFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT fridayWP FROM Weeks WHERE wId = :weekId")
+    int getFridayWPFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT saturdayWP FROM Weeks WHERE wId = :weekId")
+    int getSaturdayWPFromWeekId(Long weekId);
+    @Query("SELECT DISTINCT sundayWP FROM Weeks WHERE wId = :weekId")
+    int getSundayWPFromWeekId(Long weekId);
     @Insert
     long insert(Week week);
     @Update

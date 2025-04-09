@@ -33,7 +33,7 @@ public class Week {
     @ColumnInfo(name = "weekly_point_start")
     private int weeklyPointStart;
     private int dailyLimit = 28;
-    public Week(int weeklyPointStart, Long mondayId){
+    public Week(int weeklyPointStart){
         this.weeklyPoints = weeklyPointStart;
         this.weeklyPointStart = weeklyPointStart;
     }

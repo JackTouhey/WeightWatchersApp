@@ -10,7 +10,7 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Day.class, Week.class}, version = 5)
+@Database(entities = {Day.class, Week.class}, version = 6)
 @TypeConverters({JSONConverter.class, weekJSONConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DayDao dayDao();
