@@ -14,10 +14,10 @@ import java.util.ArrayList;
 public class Week {
     @PrimaryKey(autoGenerate = true)
     private long wId;
-    @ColumnInfo(name="mondayId")
-    private Long mondayId;
-    @ColumnInfo(name = "tuesdayId")
-    private Long tuesdayId;
+    @ColumnInfo(name="mondayWP")
+    private int mondayWP;
+    @ColumnInfo(name = "tuesdayWP")
+    private int tuesdayWP;
     @ColumnInfo(name = "wednesdayId")
     private Long wednesdayId;
     @ColumnInfo(name = "thursdayId")
@@ -36,18 +36,17 @@ public class Week {
     public Week(int weeklyPointStart, Long mondayId){
         this.weeklyPoints = weeklyPointStart;
         this.weeklyPointStart = weeklyPointStart;
-        this.mondayId = mondayId;
     }
     public int getWeeklyPointStart(){return this.weeklyPointStart;}
     public void setWeeklyPointStart(int weeklyPointStart){this.weeklyPointStart = weeklyPointStart;}
     public long getWId(){return this.wId;}
-    public Long getMondayId(){return this.mondayId;}
-    public Long getTuesdayId(){return this.tuesdayId;}
-    public Long getWednesdayId(){return this.wednesdayId;}
-    public Long getThursdayId(){return this.thursdayId;}
-    public Long getFridayId(){return this.fridayId;}
-    public Long getSaturdayId(){return this.saturdayId;}
-    public Long getSundayId(){return this.sundayId;}
+    public Long getMondayId(){return (wId * 7) - 6;}
+    public Long getTuesdayId(){return (wId * 7) - 5;}
+    public Long getWednesdayId(){return (wId * 7) - 4;}
+    public Long getThursdayId(){return (wId * 7) - 3;}
+    public Long getFridayId(){return (wId * 7) - 2;}
+    public Long getSaturdayId(){return (wId * 7) - 1;}
+    public Long getSundayId(){return (wId * 7);}
     public int getDailyLimit(){return this.dailyLimit;}
     public void setWId(long wId){this.wId = wId;}
     public void setMondayId(Long mondayId){
@@ -64,4 +63,5 @@ public class Week {
     public int getWeeklyPoints(){
         return this.weeklyPoints;
     }
+
 }
