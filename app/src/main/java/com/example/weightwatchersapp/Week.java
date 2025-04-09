@@ -18,16 +18,16 @@ public class Week {
     private int mondayWP;
     @ColumnInfo(name = "tuesdayWP")
     private int tuesdayWP;
-    @ColumnInfo(name = "wednesdayId")
-    private Long wednesdayId;
-    @ColumnInfo(name = "thursdayId")
-    private Long thursdayId;
-    @ColumnInfo(name = "fridayId")
-    private Long fridayId;
-    @ColumnInfo(name = "saturdayId")
-    private Long saturdayId;
-    @ColumnInfo(name = "sundayId")
-    private Long sundayId;
+    @ColumnInfo(name = "wednesdayWP")
+    private int wednesdayWP;
+    @ColumnInfo(name = "thursdayWP")
+    private int thursdayWP;
+    @ColumnInfo(name = "fridayWP")
+    private int fridayWP;
+    @ColumnInfo(name = "saturdayWP")
+    private int saturdayWP;
+    @ColumnInfo(name = "sundayWP")
+    private int sundayWP;
     @ColumnInfo(name = "weekly_points")
     private int weeklyPoints;
     @ColumnInfo(name = "weekly_point_start")
@@ -49,15 +49,20 @@ public class Week {
     public Long getSundayId(){return (wId * 7);}
     public int getDailyLimit(){return this.dailyLimit;}
     public void setWId(long wId){this.wId = wId;}
-    public void setMondayId(Long mondayId){
-        Log.d("DEBUG", "Setting MondayId: " + mondayId);
-        this.mondayId = mondayId;}
-    public void setTuesdayId(Long tuesdayId){this.tuesdayId = tuesdayId;}
-    public void setWednesdayId(Long wednesdayId){this.wednesdayId = wednesdayId;}
-    public void setThursdayId(Long thursday){this.thursdayId = thursday;}
-    public void setFridayId(Long friday){this.fridayId = friday;}
-    public void setSaturdayId(Long saturday){this.saturdayId = saturday;}
-    public void setSundayId(Long sunday){this.sundayId = sunday;}
+    public void setMondayWP(int mondayWP){this.mondayWP = mondayWP;}
+    public void setTuesdayWP(int tuesdayWP){this.tuesdayWP = tuesdayWP;}
+    public void setWednesdayWP(int wednesdayWP){this.wednesdayWP = wednesdayWP;}
+    public void setThursdayWP(int thursdayWP){this.thursdayWP = thursdayWP;}
+    public void setFridayWP(int fridayWP){this.fridayWP = fridayWP;}
+    public void setSaturdayWP(int saturdayWP){this.saturdayWP = saturdayWP;}
+    public void setSundayWP(int sundayWP){this.sundayWP = sundayWP;}
+    public int getMondayWP(){return this.mondayWP;}
+    public int getTuesdayWP(){return this.tuesdayWP;}
+    public int getWednesdayWP(){return this.wednesdayWP;}
+    public int getThursdayWP(){return this.thursdayWP;}
+    public int getFridayWP(){return this.fridayWP;}
+    public int getSaturdayWP(){return this.saturdayWP;}
+    public int getSundayWP(){return this.sundayWP;}
     public void setDailyLimit(int dailyLimit){this.dailyLimit = dailyLimit;}
     public void setWeeklyPoints(int weeklyPoints){this.weeklyPoints = weeklyPoints;}
     public int getWeeklyPoints(){
