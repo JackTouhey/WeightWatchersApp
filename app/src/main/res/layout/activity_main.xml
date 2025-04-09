@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -7,248 +7,264 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Header Section -->
     <TextView
         android:id="@+id/dayViewTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
         android:text="@string/day_view"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/currentDayDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/dayViewTextView"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="-76dp"
-        android:text="@string/placeholder" />
+        android:layout_marginStart="8dp"
+        android:text="@string/placeholder"
+        app:layout_constraintBottom_toBottomOf="@+id/dayViewTextView"
+        app:layout_constraintStart_toEndOf="@+id/dayViewTextView"
+        app:layout_constraintTop_toTopOf="@+id/dayViewTextView" />
 
-    <TextView
-        android:id="@+id/remainingPointsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="329dp"
-        android:layout_marginEnd="-138dp"
-        android:text="@string/remaining_points"
-        android:textSize="15sp"
-        android:textStyle="bold" />
-
+    <!-- Meal Points Section -->
     <TextView
         android:id="@+id/breakfastPointTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/dayViewTextView"
-        android:layout_marginBottom="-50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/breakfast_points"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/lunchPointTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/breakfastPointTextView"
-        android:layout_marginBottom="-50dp"
-        android:text="@string/lunch_points"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/dinnerPointTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/lunchPointTextView"
-        android:layout_marginBottom="-50dp"
-        android:text="@string/dinner_points"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/otherPointTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/dinnerPointTextView"
-        android:layout_marginBottom="-50dp"
-        android:text="@string/other_points"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dayViewTextView" />
 
     <TextView
         android:id="@+id/breakfastPointDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/breakfastPointTextView"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="69dp"
-        android:layout_marginEnd="-107dp"
+        android:layout_marginStart="16dp"
         android:text="@string/not_set"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/breakfastPointTextView"
+        app:layout_constraintStart_toEndOf="@+id/breakfastPointTextView"
+        app:layout_constraintTop_toTopOf="@+id/breakfastPointTextView" />
+
+    <EditText
+        android:id="@+id/breakfastPointInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/breakfastPointDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/breakfastPointDisplay"
+        app:layout_constraintTop_toTopOf="@+id/breakfastPointDisplay"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/lunchPointTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/lunch_points"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/breakfastPointTextView"
+        app:layout_constraintTop_toBottomOf="@+id/breakfastPointTextView" />
 
     <TextView
         android:id="@+id/lunchPointDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/breakfastPointDisplay"
-        android:layout_alignEnd="@+id/lunchPointTextView"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="-132dp"
         android:text="@string/not_set"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lunchPointTextView"
+        app:layout_constraintStart_toStartOf="@+id/breakfastPointDisplay"
+        app:layout_constraintTop_toTopOf="@+id/lunchPointTextView" />
+
+    <EditText
+        android:id="@+id/lunchPointInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lunchPointDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/breakfastPointInput"
+        app:layout_constraintTop_toTopOf="@+id/lunchPointDisplay"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/dinnerPointTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/dinner_points"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/lunchPointTextView"
+        app:layout_constraintTop_toBottomOf="@+id/lunchPointTextView" />
 
     <TextView
         android:id="@+id/dinnerPointDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lunchPointDisplay"
-        android:layout_alignEnd="@+id/dinnerPointTextView"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="-129dp"
         android:text="@string/not_set"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dinnerPointTextView"
+        app:layout_constraintStart_toStartOf="@+id/lunchPointDisplay"
+        app:layout_constraintTop_toTopOf="@+id/dinnerPointTextView" />
+
+    <EditText
+        android:id="@+id/dinnerPointInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/dinnerPointDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/lunchPointInput"
+        app:layout_constraintTop_toTopOf="@+id/dinnerPointDisplay"
+        android:importantForAutofill="no" />
+
+    <TextView
+        android:id="@+id/otherPointTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/other_points"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/dinnerPointTextView"
+        app:layout_constraintTop_toBottomOf="@+id/dinnerPointTextView" />
 
     <TextView
         android:id="@+id/otherPointDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dinnerPointDisplay"
-        android:layout_alignEnd="@+id/otherPointTextView"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="-135dp"
         android:text="@string/not_set"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/breakfastPointInput"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/breakfastPointDisplay"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="-131dp"
-        android:layout_marginBottom="4dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="12sp" />
-
-    <EditText
-        android:id="@+id/lunchPointInput"
-        android:layout_width="95dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/breakfastPointInput"
-        android:layout_alignEnd="@+id/lunchPointDisplay"
-        android:layout_marginTop="13dp"
-        android:layout_marginEnd="-130dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="12sp" />
-
-    <EditText
-        android:id="@+id/dinnerPointInput"
-        android:layout_width="99dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lunchPointInput"
-        android:layout_alignEnd="@+id/dinnerPointDisplay"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="-134dp"
-        android:ems="10"
-        android:inputType="number"
-        android:textSize="12sp" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/otherPointTextView"
+        app:layout_constraintStart_toStartOf="@+id/dinnerPointDisplay"
+        app:layout_constraintTop_toTopOf="@+id/otherPointTextView" />
 
     <EditText
         android:id="@+id/otherPointInput"
-        android:layout_width="98dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dinnerPointInput"
-        android:layout_alignEnd="@+id/otherPointDisplay"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="-134dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="number"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/otherPointDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/dinnerPointInput"
+        app:layout_constraintTop_toTopOf="@+id/otherPointDisplay"
+        android:importantForAutofill="no" />
 
-    <Button
-        android:id="@+id/submitDayButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/otherPointDisplay"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="124dp"
-        android:layout_marginTop="18dp"
-        android:text="@string/submit_day" />
-
-    <TextView
-        android:id="@+id/remainingDailyPointsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="367dp"
-        android:text="@string/daily" />
-
-    <TextView
-        android:id="@+id/remainingDailyPointsDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="106dp"
-        android:layout_marginTop="367dp"
-        android:layout_marginEnd="-61dp"
-        android:text="@string/placeholder" />
-
-    <TextView
-        android:id="@+id/remainingWeeklyPointsDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="105dp"
-        android:layout_marginTop="391dp"
-        android:layout_marginEnd="-61dp"
-        android:text="@string/placeholder" />
-
-    <TextView
-        android:id="@+id/remainingWeeklyTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="391dp"
-        android:text="@string/weekly_points" />
-
-    <Button
-        android:id="@+id/addBeerButton"
-        android:layout_width="149dp"
-        android:layout_height="70dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="423dp"
-        android:text="@string/add_beer" />
-
-    <Button
-        android:id="@+id/historyButton"
-        android:layout_width="149dp"
-        android:layout_height="70dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="110dp"
-        android:layout_marginTop="655dp"
-        android:text="@string/history_button" />
+    <!-- Remaining Points Section -->
 
     <Button
         android:id="@+id/addAllButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="265dp"
-        android:layout_marginTop="258dp"
-        android:text="@string/add_all" />
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/add_all"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherPointInput" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/submitDayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/submit_day"
+        app:layout_constraintEnd_toStartOf="@+id/addAllButton"
+        app:layout_constraintHorizontal_bias="0.704"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherPointInput" />
+
+    <TextView
+        android:id="@+id/remainingPointsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/remaining_points"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/submitDayButton"
+        app:layout_constraintTop_toBottomOf="@+id/submitDayButton" />
+
+    <TextView
+        android:id="@+id/remainingDailyPointsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/daily"
+        app:layout_constraintStart_toStartOf="@+id/remainingPointsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/remainingPointsTextView" />
+
+    <TextView
+        android:id="@+id/remainingDailyPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/placeholder"
+        app:layout_constraintBottom_toBottomOf="@+id/remainingDailyPointsTextView"
+        app:layout_constraintStart_toEndOf="@+id/remainingDailyPointsTextView"
+        app:layout_constraintTop_toTopOf="@+id/remainingDailyPointsTextView" />
+
+    <TextView
+        android:id="@+id/remainingWeeklyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/weekly_points_remaining"
+        app:layout_constraintStart_toStartOf="@+id/remainingDailyPointsTextView"
+        app:layout_constraintTop_toBottomOf="@+id/remainingDailyPointsTextView" />
+
+    <TextView
+        android:id="@+id/remainingWeeklyPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/placeholder"
+        app:layout_constraintBottom_toBottomOf="@+id/remainingWeeklyTextView"
+        app:layout_constraintStart_toEndOf="@+id/remainingWeeklyTextView"
+        app:layout_constraintTop_toTopOf="@+id/remainingWeeklyTextView" />
+
+    <!-- Button Section -->
+    <Button
+        android:id="@+id/addBeerButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:text="@string/add_beer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/remainingWeeklyTextView" />
+
+    <Button
+        android:id="@+id/historyButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/history_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,8 +10,8 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Day.class, Week.class}, version = 2)
-@TypeConverters({JSONConverter.class})
+@Database(entities = {Day.class, Week.class}, version = 6)
+@TypeConverters({JSONConverter.class, weekJSONConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DayDao dayDao();
     public abstract WeekDao weekDao();
@@ -27,6 +27,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(
                                     context.getApplicationContext(),
                                     AppDatabase.class, "app_database")
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

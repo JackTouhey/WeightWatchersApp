@@ -10,7 +10,7 @@
     <string name="remaining_points">Remaining Points:</string>
     <string name="placeholder">placeholder</string>
     <string name="daily">Daily:</string>
-    <string name="weekly_points">Weekly:</string>
+    <string name="weekly_points_remaining">Weekly:</string>
     <string name="add_beer">Add Beer</string>
     <string name="add_all">Add All</string>
     <string name="day_placeholder">currentDay</string>
@@ -23,4 +23,7 @@
     <string name="history_button">Go To History</string>
     <string name="home">Home</string>
     <string name="day_id_placeholder">Day ID</string>
+    <string name="weekly_points">Weekly Points:</string>
+    <string name="weekly_points_placeholder">weeklyPoints</string>
+
 </resources>
