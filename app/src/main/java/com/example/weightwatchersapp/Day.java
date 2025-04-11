@@ -101,11 +101,11 @@ public class Day  {
     }
     public void addBeer(){
         if(otherPoints != null){
-            otherPoints += 4;
+            this.otherPoints += 4;
         } else{
-            otherPoints = 4;
+            this.otherPoints = 4;
         }
-        beerCount++;
+        this.beerCount++;
     }
     public boolean hasBreakfastPoints(){
         return breakfastPoints != null;

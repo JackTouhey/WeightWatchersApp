@@ -303,7 +303,7 @@ public class Controller {
             Integer otherPoints = Integer.parseInt(otherPointsInput.getText().toString());
             AppDatabase.getDatabaseExecutor().execute(() ->{
                 Day day = db.dayDao().getDayById(currentDayId);
-                day.setOtherPoints(otherPoints);
+                day.addOtherPoints(otherPoints);
                 db.dayDao().update(day);
                 currentDay = day;
                 updateDisplayValues();
@@ -327,12 +327,20 @@ public class Controller {
         }).start();
     }
     private void onAddBeerClick(){
+        CountDownLatch latch = new CountDownLatch(1);
         AppDatabase.getDatabaseExecutor().execute(() ->{
             Day day = db.dayDao().getDayById(currentDayId);
             day.addBeer();
             db.dayDao().update(day);
             currentDay = day;
+            latch.countDown();
         });
+        try{
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
         updateDisplayValues();
         if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 8) + 4)){
             //Insult
@@ -376,7 +384,7 @@ public class Controller {
                     day.setDinnerPoints(finalDinnerPoints);
                 }
                 if (finalOtherPoints != null) {
-                    day.setOtherPoints(finalOtherPoints);
+                    day.addOtherPoints(finalOtherPoints);
                 }
                 db.dayDao().update(day);
                 currentDay = day;
