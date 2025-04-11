@@ -411,13 +411,14 @@ public class Controller {
     private void onHistoryClick(){
         activity.setContentView(R.layout.history_view);
         AppDatabase.getDatabaseExecutor().execute(() ->{
-            adapter = new HistoryAdapter(db.dayDao().getAll(), this.activity, this);
+            ArrayList<Day> history = new ArrayList<>(db.dayDao().getAll());
+            history.remove((int)db.dayDao().getCurrentDId()-1);
+            adapter = new HistoryAdapter(history, this.activity, this);
         });
         historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
         historyRecyclerView.setAdapter(adapter);
         homeButton = this.activity.findViewById(R.id.homeButton);
-
         homeButton.setOnClickListener(e->{
             setupDayView();
         });
