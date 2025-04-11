@@ -20,7 +20,7 @@
     <string name="lunch_points_placeholder">lunchPoints</string>
     <string name="dinner_points_placeholder">dinnerPoints</string>
     <string name="other_points_placeholder">otherPoints</string>
-    <string name="history_button">Go To History</string>
+    <string name="history_button">History</string>
     <string name="home">Home</string>
     <string name="day_id_placeholder">Day ID</string>
     <string name="weekly_points">Weekly Points:</string>
