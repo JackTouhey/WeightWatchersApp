@@ -45,9 +45,25 @@ public class Controller {
     private final String notEntered = "Not Entered";
     private AppDatabase db;
     private HistoryAdapter adapter;
-    String[] beerInsults = new String[] {"Whoa there big man",
+    String[] beerInsults = new String[]{
+            "Whoa there big man",
             "Looks like someone needs a taxi",
-            "Achievement unlocked: #1 Waitoa supporter",};
+            "Achievement unlocked: #1 Waitoa supporter",
+            "Buy me one next time ;)",
+            "I hope the brews are worth it",
+            "One more and I'm telling mum",
+            "Would Monty be proud of this decision?",
+            "This better be homebrew",
+            "Keep this up and I'll rename the app 'Waist Watchers'",
+            "Is your blood type now IPA?",
+            "Hydration is sexy",
+            "Why not just skip the foreplay and buy a keg",
+            "Bet you can't rip out 20 pushups right now",
+            "Your beer to dad joke ratio is getting dangerously unbalanced",
+            "Mum is so sleeping in the spare room tonight",
+            "Have you broken the seal yet?",
+            "If beer was sexiness you'd be Mr New Zealand",
+            "I see you're maintaining your buddha like figure"};
 
     public Controller(Activity activity){
         this.activity = activity;
@@ -349,7 +365,7 @@ public class Controller {
         }
         updateDisplayValues();
 
-        if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 10) + 6)){
+        if(currentDay.getBeerCount() > 4){
             int randomIndex = (int)(Math.floor(Math.random() * beerInsults.length));
             Toast toast = Toast.makeText(this.activity, beerInsults[randomIndex], Toast.LENGTH_SHORT);
             toast.show();
