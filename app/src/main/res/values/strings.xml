@@ -25,5 +25,8 @@
     <string name="day_id_placeholder">Day ID</string>
     <string name="weekly_points">Weekly Points:</string>
     <string name="weekly_points_placeholder">weeklyPoints</string>
+    <string name="settings_button">Settings</string>
+    <string name="change_daily_points">Change Daily Points:</string>
+    <string name="change_weekly_points">Change Weekly Points:</string>
 
 </resources>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/change_dp_label"
+        android:layout_width="123dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/change_daily_points"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/change_wp_label"
+        android:layout_width="141dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="22dp"
+        android:text="@string/change_weekly_points"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/change_dp_label"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/change_dp_label"
+        app:layout_constraintTop_toBottomOf="@+id/change_dp_label" />
+
+    <EditText
+        android:id="@+id/change_wp_input"
+        android:layout_width="161dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="66dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="@+id/change_wp_label"
+        app:layout_constraintEnd_toEndOf="@+id/change_dp_input"
+        app:layout_constraintHorizontal_bias="0.969"
+        app:layout_constraintStart_toStartOf="@+id/change_dp_input"
+        app:layout_constraintTop_toTopOf="@+id/change_wp_label"
+        app:layout_constraintVertical_bias="0.388" />
+
+    <EditText
+        android:id="@+id/change_dp_input"
+        android:layout_width="161dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="7dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="@+id/change_dp_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.423"
+        app:layout_constraintStart_toEndOf="@+id/change_dp_label"
+        app:layout_constraintTop_toTopOf="@+id/change_dp_label"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>
