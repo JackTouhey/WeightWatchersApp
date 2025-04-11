@@ -1,6 +1,8 @@
 package com.example.weightwatchersapp;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import android.app.Activity;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,6 +45,9 @@ public class Controller {
     private final String notEntered = "Not Entered";
     private AppDatabase db;
     private HistoryAdapter adapter;
+    String[] beerInsults = new String[] {"Whoa there big man",
+            "Looks like someone needs a taxi",
+            "Achievement unlocked: #1 Waitoa supporter",};
 
     public Controller(Activity activity){
         this.activity = activity;
@@ -303,7 +309,7 @@ public class Controller {
             Integer otherPoints = Integer.parseInt(otherPointsInput.getText().toString());
             AppDatabase.getDatabaseExecutor().execute(() ->{
                 Day day = db.dayDao().getDayById(currentDayId);
-                day.setOtherPoints(otherPoints);
+                day.addOtherPoints(otherPoints);
                 db.dayDao().update(day);
                 currentDay = day;
                 updateDisplayValues();
@@ -327,15 +333,26 @@ public class Controller {
         }).start();
     }
     private void onAddBeerClick(){
+        CountDownLatch latch = new CountDownLatch(1);
         AppDatabase.getDatabaseExecutor().execute(() ->{
             Day day = db.dayDao().getDayById(currentDayId);
             day.addBeer();
             db.dayDao().update(day);
             currentDay = day;
+            latch.countDown();
         });
+        try{
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
         updateDisplayValues();
-        if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 8) + 4)){
-            //Insult
+
+        if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 10) + 6)){
+            int randomIndex = (int)(Math.floor(Math.random() * beerInsults.length));
+            Toast toast = Toast.makeText(this.activity, beerInsults[randomIndex], Toast.LENGTH_SHORT);
+            toast.show();
         }
     }
     private void onAddAllClick() {
@@ -376,7 +393,7 @@ public class Controller {
                     day.setDinnerPoints(finalDinnerPoints);
                 }
                 if (finalOtherPoints != null) {
-                    day.setOtherPoints(finalOtherPoints);
+                    day.addOtherPoints(finalOtherPoints);
                 }
                 db.dayDao().update(day);
                 currentDay = day;
@@ -387,7 +404,6 @@ public class Controller {
             lunchPointsInput.setText("");
             dinnerPointsInput.setText("");
             otherPointsInput.setText("");
-
         } catch (NumberFormatException nfe) {
             Log.d("POINTINPUTERROR", "NFE on setting day points: " + nfe);
         }
