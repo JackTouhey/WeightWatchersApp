@@ -409,18 +409,26 @@ public class Controller {
         }
     }
     private void onHistoryClick(){
-        activity.setContentView(R.layout.history_view);
+        CountDownLatch latch = new CountDownLatch(1);
         AppDatabase.getDatabaseExecutor().execute(() ->{
             ArrayList<Day> history = new ArrayList<>(db.dayDao().getAll());
             history.remove((int)db.dayDao().getCurrentDId()-1);
             adapter = new HistoryAdapter(history, this.activity, this);
+            latch.countDown();
         });
-        historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
-        historyRecyclerView.setAdapter(adapter);
-        homeButton = this.activity.findViewById(R.id.homeButton);
-        homeButton.setOnClickListener(e->{
-            setupDayView();
-        });
+        try{
+            latch.await();
+            activity.setContentView(R.layout.history_view);
+            historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
+            historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
+            historyRecyclerView.setAdapter(adapter);
+            homeButton = this.activity.findViewById(R.id.homeButton);
+            homeButton.setOnClickListener(e->{
+                setupDayView();
+            });
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
     }
 }
