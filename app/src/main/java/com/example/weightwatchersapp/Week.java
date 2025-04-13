@@ -32,7 +32,6 @@ public class Week {
     private int weeklyPoints;
     @ColumnInfo(name = "weekly_point_start")
     private int weeklyPointStart;
-    private int dailyLimit = 28;
     public Week(int weeklyPointStart){
         this.weeklyPoints = weeklyPointStart;
         this.weeklyPointStart = weeklyPointStart;
@@ -47,7 +46,6 @@ public class Week {
     public Long getFridayId(){return (wId * 7) - 2;}
     public Long getSaturdayId(){return (wId * 7) - 1;}
     public Long getSundayId(){return (wId * 7);}
-    public int getDailyLimit(){return this.dailyLimit;}
     public void setWId(long wId){this.wId = wId;}
     public void setMondayWP(int mondayWP){this.mondayWP = mondayWP;}
     public void setTuesdayWP(int tuesdayWP){this.tuesdayWP = tuesdayWP;}
@@ -63,7 +61,6 @@ public class Week {
     public int getFridayWP(){return this.fridayWP;}
     public int getSaturdayWP(){return this.saturdayWP;}
     public int getSundayWP(){return this.sundayWP;}
-    public void setDailyLimit(int dailyLimit){this.dailyLimit = dailyLimit;}
     public void setWeeklyPoints(int weeklyPoints){this.weeklyPoints = weeklyPoints;}
     public int getWeeklyPoints(){
         return this.weeklyPoints;

@@ -24,6 +24,7 @@ public class Controller {
     private Week currentWeek;
     private long currentWeekId;
     private int weeklyPointStart = 40;
+    private int currentDailyPoints = 28;
     private ArrayList<Day> history = new ArrayList<>();
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
@@ -75,7 +76,7 @@ public class Controller {
         AppDatabase.getDatabaseExecutor().execute(() ->{
             currentDayId = db.dayDao().getCurrentDId();
             if(currentDayId == 0){
-                currentDay = new Day("Monday", currentWeekId + 1);
+                currentDay = new Day("Monday", currentWeekId + 1, currentDailyPoints);
                 currentDayId = db.dayDao().insert(currentDay);
                 currentWeek = new Week(weeklyPointStart);
                 //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
@@ -97,7 +98,7 @@ public class Controller {
                 Week week = db.weekDao().getWeekById(currentWeekId);
                 Day day = db.dayDao().getDayById(currentDayId);
 
-                int dayPointDifference = week.getDailyLimit() - day.getTotalPoints();
+                int dayPointDifference = day.getRemainingPoints();
                 if (dayPointDifference >= 4) {
                     week.setWeeklyPoints(week.getWeeklyPoints() + 4);
                 } else {
@@ -126,37 +127,37 @@ public class Controller {
                 int currentWeeklyPoints = week.getWeeklyPoints();
                 switch (day.getName()) {
                     case "Monday":
-                        newDay = new Day("Tuesday", currentWeekId);
+                        newDay = new Day("Tuesday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setMondayWP(currentWeeklyPoints);
                         break;
                     case "Tuesday":
-                        newDay = new Day("Wednesday", currentWeekId);
+                        newDay = new Day("Wednesday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setTuesdayWP(currentWeeklyPoints);
                         break;
                     case "Wednesday":
-                        newDay = new Day("Thursday", currentWeekId);
+                        newDay = new Day("Thursday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setWednesdayWP(currentWeeklyPoints);
                         break;
                     case "Thursday":
-                        newDay = new Day("Friday", currentWeekId);
+                        newDay = new Day("Friday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setThursdayWP(currentWeeklyPoints);
                         break;
                     case "Friday":
-                        newDay = new Day("Saturday", currentWeekId);
+                        newDay = new Day("Saturday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setFridayWP(currentWeeklyPoints);
                         break;
                     case "Saturday":
-                        newDay = new Day("Sunday", currentWeekId);
+                        newDay = new Day("Sunday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setSaturdayWP(currentWeeklyPoints);
                         break;
                     case "Sunday":
-                        newDay = new Day("Monday", currentWeekId + 1);
+                        newDay = new Day("Monday", currentWeekId + 1, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setSundayWP(currentWeeklyPoints);
                         db.weekDao().update(week);
@@ -462,7 +463,9 @@ public class Controller {
         changeDailyPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    changeDailyPoints();
+                    Integer newDailyPoints = Integer.parseInt(changeDailyPointsInput.getText().toString());
+                    changeDailyPoints(newDailyPoints);
+                    changeDailyPointsInput.setText("");
                     return true;
                 }
                 return false;
@@ -471,7 +474,9 @@ public class Controller {
         changeWeeklyPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
-                    changeWeeklyPoints();
+                    Integer newWeeklyPoints = Integer.parseInt(changeWeeklyPointsInput.getText().toString());
+                    changeWeeklyPoints(newWeeklyPoints);
+                    changeWeeklyPointsInput.setText("");
                     return true;
                 }
                 return false;
@@ -481,10 +486,14 @@ public class Controller {
             setupDayView();
         });
     }
-    private void changeDailyPoints(){
-
+    private void changeDailyPoints(Integer newDailyPoints){
+        this.currentDailyPoints = newDailyPoints;
+        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints + ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
+        toast.show();
     }
-    private void changeWeeklyPoints(){
-
+    private void changeWeeklyPoints(Integer newWeeklyPoints){
+        this.weeklyPointStart = newWeeklyPoints;
+        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
