@@ -36,11 +36,15 @@ public class Controller {
     EditText lunchPointsInput;
     EditText dinnerPointsInput;
     EditText otherPointsInput;
+    EditText changeDailyPointsInput;
+    EditText changeWeeklyPointsInput;
     Button submitDay;
     Button addBeer;
     Button addAll;
     Button historyButton;
-    Button homeButton;
+    Button historyHomeButton;
+    Button settingsButton;
+    Button settingsHomeButton;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
     private AppDatabase db;
@@ -224,6 +228,7 @@ public class Controller {
         addBeer = this.activity.findViewById(R.id.addBeerButton);
         addAll = this.activity.findViewById(R.id.addAllButton);
         historyButton = this.activity.findViewById(R.id.historyButton);
+        settingsButton = this.activity.findViewById(R.id.settingsButton);
         breakfastPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event){
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
@@ -272,6 +277,9 @@ public class Controller {
         });
         historyButton.setOnClickListener(e->{
             onHistoryClick();
+        });
+        settingsButton.setOnClickListener(e ->{
+            setupSettingsPage();
         });
     }
     private void addBreakfast(){
@@ -415,7 +423,6 @@ public class Controller {
                 currentDay = day;
                 updateDisplayValues();
             });
-
             breakfastPointsInput.setText("");
             lunchPointsInput.setText("");
             dinnerPointsInput.setText("");
@@ -438,13 +445,46 @@ public class Controller {
             historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
             historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
             historyRecyclerView.setAdapter(adapter);
-            homeButton = this.activity.findViewById(R.id.homeButton);
-            homeButton.setOnClickListener(e->{
+            historyHomeButton = this.activity.findViewById(R.id.homeButton);
+            historyHomeButton.setOnClickListener(e->{
                 setupDayView();
             });
         } catch (InterruptedException e) {
             Log.e("DayFragment", "Waiting interrupted", e);
             Thread.currentThread().interrupt();
         }
+    }
+    private void setupSettingsPage(){
+        activity.setContentView(R.layout.settings_page);
+        changeDailyPointsInput = this.activity.findViewById(R.id.change_dp_input);
+        changeWeeklyPointsInput = this.activity.findViewById(R.id.change_wp_input);
+        settingsHomeButton = this.activity.findViewById(R.id.settingsHomeButton);
+        changeDailyPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    changeDailyPoints();
+                    return true;
+                }
+                return false;
+            }
+        });
+        changeWeeklyPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    changeWeeklyPoints();
+                    return true;
+                }
+                return false;
+            }
+        });
+        settingsHomeButton.setOnClickListener(e->{
+            setupDayView();
+        });
+    }
+    private void changeDailyPoints(){
+
+    }
+    private void changeWeeklyPoints(){
+
     }
 }
