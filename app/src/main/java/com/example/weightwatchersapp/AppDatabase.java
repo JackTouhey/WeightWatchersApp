@@ -19,6 +19,11 @@ public abstract class AppDatabase extends RoomDatabase {
     public static ExecutorService getDatabaseExecutor() {
         return databaseExecutor;
     }
+    public static void shutdownExecutor() {
+        if (databaseExecutor != null && !databaseExecutor.isShutdown()) {
+            databaseExecutor.shutdown();
+        }
+    }
     private static volatile AppDatabase INSTANCE;
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {

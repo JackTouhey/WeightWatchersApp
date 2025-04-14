@@ -26,6 +26,7 @@ public class Controller {
     private int weeklyPointStart = 40;
     private int currentDailyPoints = 28;
     private ArrayList<Day> history = new ArrayList<>();
+    private int currentPage;
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
     TextView dinnerPointsDisplay;
@@ -69,28 +70,43 @@ public class Controller {
             "Have you broken the seal yet?",
             "If beer was sexiness you'd be Mr New Zealand",
             "I see you're maintaining your buddha like figure"};
-
-    public Controller(Activity activity){
+    public int getCurrentPage(){return this.currentPage;}
+    public Controller(Activity activity, int currentPage) {
         this.activity = activity;
         this.db = AppDatabase.getDatabase(this.activity);
-        AppDatabase.getDatabaseExecutor().execute(() ->{
-            currentDayId = db.dayDao().getCurrentDId();
-            if(currentDayId == 0){
-                currentDay = new Day("Monday", currentWeekId + 1, currentDailyPoints);
-                currentDayId = db.dayDao().insert(currentDay);
-                currentWeek = new Week(weeklyPointStart);
-                //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
-                currentWeekId = db.weekDao().insert(currentWeek);
-                currentWeek.setWId(currentWeekId);
-                db.weekDao().update(currentWeek);
-            }
-            else{
-                currentWeekId = db.weekDao().getCurrentWId();
-                currentDay = db.dayDao().getDayById(currentDayId);
-                currentWeek = db.weekDao().getWeekById(currentWeekId);
-            }
-            activity.runOnUiThread(this::setupDayView);
-        });
+        this.currentPage = currentPage;
+        if (!AppDatabase.getDatabaseExecutor().isShutdown()) {
+            AppDatabase.getDatabaseExecutor().execute(() -> {
+                try {
+                    currentDayId = db.dayDao().getCurrentDId();
+                    if (currentDayId == 0) {
+                        currentDay = new Day("Monday", currentWeekId + 1, currentDailyPoints);
+                        currentDayId = db.dayDao().insert(currentDay);
+                        currentWeek = new Week(weeklyPointStart);
+                        currentWeekId = db.weekDao().insert(currentWeek);
+                        currentWeek.setWId(currentWeekId);
+                        db.weekDao().update(currentWeek);
+                    } else {
+                        currentWeekId = db.weekDao().getCurrentWId();
+                        currentDay = db.dayDao().getDayById(currentDayId);
+                        currentWeek = db.weekDao().getWeekById(currentWeekId);
+                    }
+                    if (!activity.isFinishing() && !activity.isDestroyed()) {
+                        activity.runOnUiThread(() -> {
+                            if (this.currentPage == 1) {
+                                setupHomePage();
+                            } else if (this.currentPage == 2) {
+                                setupHistoryPage();
+                            } else if (this.currentPage == 3) {
+                                setupSettingsPage();
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    Log.d("CONSTRUCTOR ERROR", e.toString());
+                }
+            });
+        }
     }
     private void completeDay(CountDownLatch outerLatch) {
         AppDatabase.getDatabaseExecutor().execute(() -> {
@@ -171,7 +187,8 @@ public class Controller {
             }
         });
     }
-    public void setupDayView(){
+    public void setupHomePage(){
+        this.currentPage = 1;
         activity.setContentView(R.layout.activity_main);
         breakfastPointsDisplay = this.activity.findViewById(R.id.breakfastPointDisplay);
         lunchPointsDisplay = this.activity.findViewById(R.id.lunchPointDisplay);
@@ -277,7 +294,7 @@ public class Controller {
             onAddAllClick();
         });
         historyButton.setOnClickListener(e->{
-            onHistoryClick();
+            setupHistoryPage();
         });
         settingsButton.setOnClickListener(e ->{
             setupSettingsPage();
@@ -432,7 +449,8 @@ public class Controller {
             Log.d("POINTINPUTERROR", "NFE on setting day points: " + nfe);
         }
     }
-    private void onHistoryClick(){
+    private void setupHistoryPage(){
+        this.currentPage = 2;
         CountDownLatch latch = new CountDownLatch(1);
         AppDatabase.getDatabaseExecutor().execute(() ->{
             ArrayList<Day> history = new ArrayList<>(db.dayDao().getAll());
@@ -448,7 +466,7 @@ public class Controller {
             historyRecyclerView.setAdapter(adapter);
             historyHomeButton = this.activity.findViewById(R.id.homeButton);
             historyHomeButton.setOnClickListener(e->{
-                setupDayView();
+                setupHomePage();
             });
         } catch (InterruptedException e) {
             Log.e("DayFragment", "Waiting interrupted", e);
@@ -456,6 +474,7 @@ public class Controller {
         }
     }
     private void setupSettingsPage(){
+        this.currentPage = 3;
         activity.setContentView(R.layout.settings_page);
         changeDailyPointsInput = this.activity.findViewById(R.id.change_dp_input);
         changeWeeklyPointsInput = this.activity.findViewById(R.id.change_wp_input);
@@ -483,7 +502,7 @@ public class Controller {
             }
         });
         settingsHomeButton.setOnClickListener(e->{
-            setupDayView();
+            setupHomePage();
         });
     }
     private void changeDailyPoints(Integer newDailyPoints){
