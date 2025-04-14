@@ -26,13 +26,14 @@ public class Day  {
     @ColumnInfo(name = "beer_count")
     private int beerCount = 0;
     @ColumnInfo(name = "daily_points")
-    private int dailyPoints = 28;
+    private int dailyPoints;
     @ColumnInfo(name = "weekId")
     private long weekId;
 
-    public Day(String name, long weekId){
+    public Day(String name, long weekId, int dailyPoints){
         this.name = name;
         this.weekId = weekId;
+        this.dailyPoints = dailyPoints;
     }
     public void setWeekId(long weekId){this.weekId = weekId;}
     public long getWeekId(){return this.weekId;}

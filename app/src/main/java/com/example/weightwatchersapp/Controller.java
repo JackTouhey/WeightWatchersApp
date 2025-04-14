@@ -24,6 +24,7 @@ public class Controller {
     private Week currentWeek;
     private long currentWeekId;
     private int weeklyPointStart = 40;
+    private int currentDailyPoints = 28;
     private ArrayList<Day> history = new ArrayList<>();
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
@@ -36,18 +37,38 @@ public class Controller {
     EditText lunchPointsInput;
     EditText dinnerPointsInput;
     EditText otherPointsInput;
+    EditText changeDailyPointsInput;
+    EditText changeWeeklyPointsInput;
     Button submitDay;
     Button addBeer;
     Button addAll;
     Button historyButton;
-    Button homeButton;
+    Button historyHomeButton;
+    Button settingsButton;
+    Button settingsHomeButton;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
     private AppDatabase db;
     private HistoryAdapter adapter;
-    String[] beerInsults = new String[] {"Whoa there big man",
+    String[] beerInsults = new String[]{
+            "Whoa there big man",
             "Looks like someone needs a taxi",
-            "Achievement unlocked: #1 Waitoa supporter",};
+            "Achievement unlocked: #1 Waitoa supporter",
+            "Buy me one next time ;)",
+            "I hope the brews are worth it",
+            "One more and I'm telling mum",
+            "Would Monty be proud of this decision?",
+            "This better be homebrew",
+            "Keep this up and I'll rename the app 'Waist Watchers'",
+            "Is your blood type now IPA?",
+            "Hydration is sexy",
+            "Why not just skip the foreplay and buy a keg",
+            "Bet you can't rip out 20 pushups right now",
+            "Your beer to dad joke ratio is getting dangerously unbalanced",
+            "Mum is so sleeping in the spare room tonight",
+            "Have you broken the seal yet?",
+            "If beer was sexiness you'd be Mr New Zealand",
+            "I see you're maintaining your buddha like figure"};
 
     public Controller(Activity activity){
         this.activity = activity;
@@ -55,7 +76,7 @@ public class Controller {
         AppDatabase.getDatabaseExecutor().execute(() ->{
             currentDayId = db.dayDao().getCurrentDId();
             if(currentDayId == 0){
-                currentDay = new Day("Monday", currentWeekId + 1);
+                currentDay = new Day("Monday", currentWeekId + 1, currentDailyPoints);
                 currentDayId = db.dayDao().insert(currentDay);
                 currentWeek = new Week(weeklyPointStart);
                 //currentWeek must be inserted before making Monday otherwise weekId won't be generated and be 0 causing NPE later on
@@ -77,7 +98,7 @@ public class Controller {
                 Week week = db.weekDao().getWeekById(currentWeekId);
                 Day day = db.dayDao().getDayById(currentDayId);
 
-                int dayPointDifference = week.getDailyLimit() - day.getTotalPoints();
+                int dayPointDifference = day.getRemainingPoints();
                 if (dayPointDifference >= 4) {
                     week.setWeeklyPoints(week.getWeeklyPoints() + 4);
                 } else {
@@ -106,37 +127,37 @@ public class Controller {
                 int currentWeeklyPoints = week.getWeeklyPoints();
                 switch (day.getName()) {
                     case "Monday":
-                        newDay = new Day("Tuesday", currentWeekId);
+                        newDay = new Day("Tuesday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setMondayWP(currentWeeklyPoints);
                         break;
                     case "Tuesday":
-                        newDay = new Day("Wednesday", currentWeekId);
+                        newDay = new Day("Wednesday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setTuesdayWP(currentWeeklyPoints);
                         break;
                     case "Wednesday":
-                        newDay = new Day("Thursday", currentWeekId);
+                        newDay = new Day("Thursday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setWednesdayWP(currentWeeklyPoints);
                         break;
                     case "Thursday":
-                        newDay = new Day("Friday", currentWeekId);
+                        newDay = new Day("Friday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setThursdayWP(currentWeeklyPoints);
                         break;
                     case "Friday":
-                        newDay = new Day("Saturday", currentWeekId);
+                        newDay = new Day("Saturday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setFridayWP(currentWeeklyPoints);
                         break;
                     case "Saturday":
-                        newDay = new Day("Sunday", currentWeekId);
+                        newDay = new Day("Sunday", currentWeekId, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setSaturdayWP(currentWeeklyPoints);
                         break;
                     case "Sunday":
-                        newDay = new Day("Monday", currentWeekId + 1);
+                        newDay = new Day("Monday", currentWeekId + 1, currentDailyPoints);
                         currentDayId = db.dayDao().insert(newDay);
                         week.setSundayWP(currentWeeklyPoints);
                         db.weekDao().update(week);
@@ -208,6 +229,7 @@ public class Controller {
         addBeer = this.activity.findViewById(R.id.addBeerButton);
         addAll = this.activity.findViewById(R.id.addAllButton);
         historyButton = this.activity.findViewById(R.id.historyButton);
+        settingsButton = this.activity.findViewById(R.id.settingsButton);
         breakfastPointsInput.setOnKeyListener(new View.OnKeyListener(){
             public boolean onKey(View v, int keyCode, KeyEvent event){
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
@@ -256,6 +278,9 @@ public class Controller {
         });
         historyButton.setOnClickListener(e->{
             onHistoryClick();
+        });
+        settingsButton.setOnClickListener(e ->{
+            setupSettingsPage();
         });
     }
     private void addBreakfast(){
@@ -349,7 +374,7 @@ public class Controller {
         }
         updateDisplayValues();
 
-        if(currentDay.getBeerCount() > (int)(Math.floor(Math.random() * 10) + 6)){
+        if(currentDay.getBeerCount() > 4){
             int randomIndex = (int)(Math.floor(Math.random() * beerInsults.length));
             Toast toast = Toast.makeText(this.activity, beerInsults[randomIndex], Toast.LENGTH_SHORT);
             toast.show();
@@ -399,7 +424,6 @@ public class Controller {
                 currentDay = day;
                 updateDisplayValues();
             });
-
             breakfastPointsInput.setText("");
             lunchPointsInput.setText("");
             dinnerPointsInput.setText("");
@@ -422,13 +446,54 @@ public class Controller {
             historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
             historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
             historyRecyclerView.setAdapter(adapter);
-            homeButton = this.activity.findViewById(R.id.homeButton);
-            homeButton.setOnClickListener(e->{
+            historyHomeButton = this.activity.findViewById(R.id.homeButton);
+            historyHomeButton.setOnClickListener(e->{
                 setupDayView();
             });
         } catch (InterruptedException e) {
             Log.e("DayFragment", "Waiting interrupted", e);
             Thread.currentThread().interrupt();
         }
+    }
+    private void setupSettingsPage(){
+        activity.setContentView(R.layout.settings_page);
+        changeDailyPointsInput = this.activity.findViewById(R.id.change_dp_input);
+        changeWeeklyPointsInput = this.activity.findViewById(R.id.change_wp_input);
+        settingsHomeButton = this.activity.findViewById(R.id.settingsHomeButton);
+        changeDailyPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    Integer newDailyPoints = Integer.parseInt(changeDailyPointsInput.getText().toString());
+                    changeDailyPoints(newDailyPoints);
+                    changeDailyPointsInput.setText("");
+                    return true;
+                }
+                return false;
+            }
+        });
+        changeWeeklyPointsInput.setOnKeyListener(new View.OnKeyListener(){
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
+                    Integer newWeeklyPoints = Integer.parseInt(changeWeeklyPointsInput.getText().toString());
+                    changeWeeklyPoints(newWeeklyPoints);
+                    changeWeeklyPointsInput.setText("");
+                    return true;
+                }
+                return false;
+            }
+        });
+        settingsHomeButton.setOnClickListener(e->{
+            setupDayView();
+        });
+    }
+    private void changeDailyPoints(Integer newDailyPoints){
+        this.currentDailyPoints = newDailyPoints;
+        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints + ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    private void changeWeeklyPoints(Integer newWeeklyPoints){
+        this.weeklyPointStart = newWeeklyPoints;
+        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
+        toast.show();
     }
 }
