@@ -17,15 +17,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        controller = new Controller(this);
-        controller.setupDayView();
+        if (savedInstanceState != null){
+            controller = new Controller(this, savedInstanceState.getInt("currentPage"));
+        }
+        else{
+            controller = new Controller(this, 1);
+        }
+
     }
     @Override
     protected void onDestroy(){
+        if (isFinishing()) {
+            AppDatabase.shutdownExecutor();
+        }
         super.onDestroy();
-        AppDatabase.getDatabaseExecutor().shutdown();
     }
     public void onSaveInstanceState(Bundle outstate){
+        outstate.putInt("currentPage", controller.getCurrentPage());
         super.onSaveInstanceState(outstate);
     }
 }
