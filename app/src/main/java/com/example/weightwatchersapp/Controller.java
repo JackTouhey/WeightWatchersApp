@@ -113,7 +113,6 @@ public class Controller {
             try {
                 Week week = db.weekDao().getWeekById(currentWeekId);
                 Day day = db.dayDao().getDayById(currentDayId);
-
                 int dayPointDifference = day.getRemainingPoints();
                 if (dayPointDifference >= 4) {
                     week.setWeeklyPoints(week.getWeeklyPoints() + 4);
