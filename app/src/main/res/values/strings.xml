@@ -28,5 +28,5 @@
     <string name="settings_button">Settings</string>
     <string name="change_daily_points">Change Daily Points:</string>
     <string name="change_weekly_points">Change Weekly Points:</string>
-
+    <string name="delete_history">Delete</string>
 </resources>

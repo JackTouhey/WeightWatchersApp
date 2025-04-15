@@ -51,6 +51,7 @@ public class Controller {
     private final String notEntered = "Not Entered";
     private AppDatabase db;
     private HistoryAdapter adapter;
+    private boolean isHistory;
     String[] beerInsults = new String[]{
             "Whoa there big man",
             "Looks like someone needs a taxi",
@@ -454,20 +455,30 @@ public class Controller {
         CountDownLatch latch = new CountDownLatch(1);
         AppDatabase.getDatabaseExecutor().execute(() ->{
             ArrayList<Day> history = new ArrayList<>(db.dayDao().getAll());
+            if(history.size() > 1){
+                isHistory = true;
+            } else{
+                isHistory = false;
+            }
             history.remove((int)db.dayDao().getCurrentDId()-1);
             adapter = new HistoryAdapter(history, this.activity, this);
             latch.countDown();
         });
         try{
             latch.await();
-            activity.setContentView(R.layout.history_view);
-            historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
-            historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
-            historyRecyclerView.setAdapter(adapter);
-            historyHomeButton = this.activity.findViewById(R.id.homeButton);
-            historyHomeButton.setOnClickListener(e->{
-                setupHomePage();
-            });
+            if(isHistory){
+                activity.setContentView(R.layout.history_view);
+                historyRecyclerView = this.activity.findViewById(R.id.historyRecyclerView);
+                historyRecyclerView.setLayoutManager(new LinearLayoutManager(this.activity));
+                historyRecyclerView.setAdapter(adapter);
+                historyHomeButton = this.activity.findViewById(R.id.homeButton);
+                historyHomeButton.setOnClickListener(e->{
+                    setupHomePage();
+                });
+            }else{
+                Toast toast = Toast.makeText(this.activity, "No current History to show", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         } catch (InterruptedException e) {
             Log.e("DayFragment", "Waiting interrupted", e);
             Thread.currentThread().interrupt();
@@ -507,12 +518,30 @@ public class Controller {
     }
     private void changeDailyPoints(Integer newDailyPoints){
         this.currentDailyPoints = newDailyPoints;
-        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints + ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints +
+                ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
         toast.show();
     }
     private void changeWeeklyPoints(Integer newWeeklyPoints){
         this.weeklyPointStart = newWeeklyPoints;
-        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart +
+                ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
         toast.show();
+    }
+    public void deleteHistoryDay(long dayId){
+        CountDownLatch latch = new CountDownLatch(1);
+        AppDatabase.getDatabaseExecutor().execute(() ->{
+            Day deletedDay = db.dayDao().getDayById(dayId);
+            db.dayDao().delete(deletedDay);
+            latch.countDown();
+        });
+        try{
+            latch.await();
+            setupHistoryPage();
+        }
+        catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
     }
 }

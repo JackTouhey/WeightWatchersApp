@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +48,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                 holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
                 holder.dayIdDisplay.setText(String.valueOf(currentDay.getDId()));
                 holder.weeklyPointsDisplay.setText(String.valueOf(weeklyPoints));
+                holder.deleteButton.setOnClickListener(e->{
+                    controller.deleteHistoryDay(dId);
+                });
                 if(currentDay.getBreakfastPoints() != null){
                     holder.breakfastPointsDisplay.setText(String.valueOf(currentDay.getBreakfastPoints()));
                 }
@@ -72,7 +76,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
                     holder.otherPointsDisplay.setText("Not Entered");
                 }
             });
-
         });
     }
 
@@ -90,6 +93,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         TextView dinnerPointsDisplay;
         TextView otherPointsDisplay;
         TextView weeklyPointsDisplay;
+        Button deleteButton;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,6 +105,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             dinnerPointsDisplay = itemView.findViewById(R.id.dinnerPointsDisplay);
             otherPointsDisplay = itemView.findViewById(R.id.otherPointsDisplay);
             weeklyPointsDisplay = itemView.findViewById(R.id.weeklyPointsDisplay);
+            deleteButton = itemView.findViewById(R.id.deleteHistory);
         }
     }
 }

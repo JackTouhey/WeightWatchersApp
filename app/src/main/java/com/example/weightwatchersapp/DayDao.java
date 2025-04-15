@@ -1,6 +1,7 @@
 package com.example.weightwatchersapp;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -56,4 +57,6 @@ public interface DayDao {
     long insert(Day day);
     @Update
     void update(Day day);
+    @Delete
+    void delete(Day day);
 }
