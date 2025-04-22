@@ -47,6 +47,11 @@ public class Controller {
     Button historyHomeButton;
     Button settingsButton;
     Button settingsHomeButton;
+    TextView editHistoryBreakfastInput;
+    TextView editHistoryLunchInput;
+    TextView editHistoryDinnerInput;
+    TextView editHistoryOtherInput;
+    Button editHistorySubmitButton;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
     private AppDatabase db;
@@ -113,7 +118,6 @@ public class Controller {
             try {
                 Week week = db.weekDao().getWeekById(currentWeekId);
                 Day day = db.dayDao().getDayById(currentDayId);
-
                 int dayPointDifference = day.getRemainingPoints();
                 if (dayPointDifference >= 4) {
                     week.setWeeklyPoints(week.getWeeklyPoints() + 4);
@@ -514,5 +518,223 @@ public class Controller {
         this.weeklyPointStart = newWeeklyPoints;
         Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
         toast.show();
+    }
+    public void setupEditHistory(long dayId){
+        activity.setContentView(R.layout.edit_history);
+        editHistoryBreakfastInput = this.activity.findViewById(R.id.editHistoryBreakfastInput);
+        editHistoryLunchInput = this.activity.findViewById(R.id.editHistoryLunchInput);
+        editHistoryDinnerInput = this.activity.findViewById(R.id.editHistoryDinnerInput);
+        editHistoryOtherInput = this.activity.findViewById(R.id.editHistoryOtherInput);
+        editHistorySubmitButton = this.activity.findViewById(R.id.editHistorySubmitButton);
+        setEditHistoryButtons(dayId);
+        CountDownLatch latch = new CountDownLatch(1);
+        setEditHistoryInputTexts(dayId, latch);
+        try{
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
+    }
+    private void setEditHistoryButtons(long dayId){
+        editHistoryBreakfastInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryBreakfastInput.setText("");
+                }
+            }
+        });
+        editHistoryLunchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryLunchInput.setText("");
+                }
+            }
+        });
+        editHistoryDinnerInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryDinnerInput.setText("");
+                }
+            }
+        });
+        editHistoryOtherInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryOtherInput.setText("");
+                }
+            }
+        });
+        editHistorySubmitButton.setOnClickListener(e->{
+            submitEditHistory(dayId);
+        });
+    }
+    private void submitEditHistory(long dayId){
+        CountDownLatch latch = new CountDownLatch(1);
+        Log.d("DEBUG", "Submit edit history dayId: " + dayId);
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Day day = db.dayDao().getDayById(dayId);
+            Week week = db.weekDao().getWeekById(day.getWeekId());
+            try{
+                String breakfastText = editHistoryBreakfastInput.getText().toString();
+                String lunchText = editHistoryLunchInput.getText().toString();
+                String dinnerText = editHistoryDinnerInput.getText().toString();
+                String otherText = editHistoryOtherInput.getText().toString();
+                if(!breakfastText.equals("Not entered")){
+                    day.setBreakfastPoints(Integer.parseInt(breakfastText));
+                }
+                if(!lunchText.equals("Not entered")){
+                    day.setLunchPoints(Integer.parseInt(lunchText));
+                }
+                if(!dinnerText.equals("Not entered")){
+                    day.setDinnerPoints(Integer.parseInt(dinnerText));
+                }
+                if(!otherText.equals("Not entered")){
+                    day.setOtherPoints(Integer.parseInt(otherText));
+                }
+            } catch (NumberFormatException e){
+                Log.d("DEBUG", "NFE: " + e);
+            }
+            db.dayDao().update(day);
+            CountDownLatch innerLatch = new CountDownLatch(1);
+            updateWeeklyPoints(dayId, week.getWId(), innerLatch);
+            try{
+                innerLatch.await();
+            } catch (InterruptedException e) {
+                Log.e("DayFragment", "Waiting interrupted", e);
+                Thread.currentThread().interrupt();
+            }
+            latch.countDown();
+        });
+        try{
+            latch.await();
+            setupHistoryPage();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
+    }
+    private void updateWeeklyPoints(long dayId, long weekId, CountDownLatch latch){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Day day = db.dayDao().getDayById(dayId);
+            Week week = db.weekDao().getWeekById(weekId);
+            int dayPointDifference = day.getRemainingPoints();
+            int previousWP;
+            Boolean isSunday = false;
+            if (dayId == 1){
+                previousWP = weeklyPointStart;
+                if(dayPointDifference >= 4){
+                    week.setMondayWP(previousWP + 4);
+                }
+                else{
+                    week.setMondayWP(previousWP + dayPointDifference);
+                }
+            }
+            else{
+                switch (day.getName()){
+                    case "Monday":
+                        previousWP = db.weekDao().getSundayWPFromWeekId(weekId - 1);
+                        if(dayPointDifference >= 4){
+                            week.setMondayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setMondayWP(previousWP + dayPointDifference);
+                        }
+                        break;
+                    case "Tuesday":
+                        previousWP = week.getMondayWP();
+                        if(dayPointDifference >= 4){
+                            week.setTuesdayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setTuesdayWP(previousWP + dayPointDifference);
+                        }
+                        break;
+                    case "Wednesday":
+                        previousWP = week.getTuesdayWP();
+                        if(dayPointDifference >= 4){
+                            week.setWednesdayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setWednesdayWP(previousWP + dayPointDifference);
+                        }
+                        break;
+                    case "Thursday":
+                        previousWP = week.getWednesdayWP();
+                        if(dayPointDifference >= 4){
+                            week.setThursdayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setThursdayWP(previousWP + dayPointDifference);
+                        }
+                        break;
+                    case "Friday":
+                        previousWP = week.getThursdayWP();
+                        if(dayPointDifference >= 4){
+                            week.setFridayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setFridayWP(previousWP + dayPointDifference);
+                        }
+                        break;
+                    case "Saturday":
+                        previousWP = week.getFridayWP();
+                        if(dayPointDifference >= 4){
+                            week.setSaturdayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setSaturdayWP(previousWP + dayPointDifference);
+                        }
+                        break;
+                    case "Sunday":
+                        previousWP = week.getSaturdayWP();
+                        if(dayPointDifference >= 4){
+                            week.setSundayWP(previousWP + 4);
+                        }
+                        else{
+                            week.setSundayWP(previousWP + dayPointDifference);
+                        }
+                        isSunday = true;
+                        break;
+                }
+            }
+            db.weekDao().update(week);
+            if(!isSunday && dayId < db.dayDao().getCurrentDId()){
+                CountDownLatch innerLatch = new CountDownLatch(1);
+                updateWeeklyPoints(dayId + 1, weekId, innerLatch);
+                try{
+                    innerLatch.await();
+                } catch (InterruptedException e) {
+                    Log.e("DayFragment", "Waiting interrupted", e);
+                    Thread.currentThread().interrupt();
+                }
+            }
+            latch.countDown();
+        });
+    }
+    private void setEditHistoryInputTexts(long dayId, CountDownLatch latch){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Integer breakfastPoints = db.dayDao().getBreakfastPoints(dayId);
+            Integer lunchPoints = db.dayDao().getLunchPoints(dayId);
+            Integer dinnerPoints = db.dayDao().getDinnerPoints(dayId);
+            Integer otherPoints = db.dayDao().getOtherPoints(dayId);
+            if(breakfastPoints != null){
+                editHistoryBreakfastInput.setText(String.valueOf(breakfastPoints));
+            }
+            if(lunchPoints != null){
+                editHistoryLunchInput.setText(String.valueOf(lunchPoints));
+            }
+            if(dinnerPoints != null){
+                editHistoryDinnerInput.setText(String.valueOf(dinnerPoints));
+            }
+            if(otherPoints != null){
+                editHistoryOtherInput.setText(String.valueOf(otherPoints));
+            }
+            latch.countDown();
+        });
     }
 }

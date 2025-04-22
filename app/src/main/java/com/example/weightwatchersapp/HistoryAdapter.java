@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
@@ -42,6 +45,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             Week currentWeek = db.weekDao().getWeekById(currentDay.getWeekId());
             int weeklyPoints = db.weekDao().getWeeklyPointsAtDay(currentWeek.getWId(), currentDay.getName());
             Log.d("DEBUG", "currentDayId: " + dId + " currentWeekId: " + currentWeek.getWId() + " currentWeeklyPoints: " + weeklyPoints);
+            holder.editButton.setOnClickListener(e->{
+                controller.setupEditHistory(dId);
+            });
             activity.runOnUiThread(() ->{
                 holder.currentDayDisplay.setText(currentDay.getName());
                 holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));
@@ -90,6 +96,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         TextView dinnerPointsDisplay;
         TextView otherPointsDisplay;
         TextView weeklyPointsDisplay;
+        Button editButton;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,6 +108,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             dinnerPointsDisplay = itemView.findViewById(R.id.dinnerPointsDisplay);
             otherPointsDisplay = itemView.findViewById(R.id.otherPointsDisplay);
             weeklyPointsDisplay = itemView.findViewById(R.id.weeklyPointsDisplay);
+            editButton = itemView.findViewById(R.id.editButton);
         }
     }
 }
