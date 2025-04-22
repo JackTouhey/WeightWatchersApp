@@ -45,6 +45,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
             Week currentWeek = db.weekDao().getWeekById(currentDay.getWeekId());
             int weeklyPoints = db.weekDao().getWeeklyPointsAtDay(currentWeek.getWId(), currentDay.getName());
             Log.d("DEBUG", "currentDayId: " + dId + " currentWeekId: " + currentWeek.getWId() + " currentWeeklyPoints: " + weeklyPoints);
+            holder.editButton.setOnClickListener(e->{
+                controller.setupEditHistory(dId);
+            });
             activity.runOnUiThread(() ->{
                 holder.currentDayDisplay.setText(currentDay.getName());
                 holder.dailyPointsDisplay.setText(String.valueOf(currentDay.getTotalPoints()));

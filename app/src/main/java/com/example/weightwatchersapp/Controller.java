@@ -514,4 +514,7 @@ public class Controller {
         Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
         toast.show();
     }
+    public void setupEditHistory(long dayId){
+
+    }
 }
