@@ -535,6 +535,40 @@ public class Controller {
             Thread.currentThread().interrupt();
         }
     }
+    private void setEditHistoryInputListeners(){
+        editHistoryBreakfastInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryBreakfastInput.setText("");
+                }
+            }
+        });
+        editHistoryLunchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryLunchInput.setText("");
+                }
+            }
+        });
+        editHistoryDinnerInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryDinnerInput.setText("");
+                }
+            }
+        });
+        editHistoryOtherInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editHistoryOtherInput.setText("");
+                }
+            }
+        });
+    }
     private void setEditHistoryInputTexts(long dayId, CountDownLatch latch){
         AppDatabase.getDatabaseExecutor().execute(()->{
             Integer breakfastPoints = db.dayDao().getBreakfastPoints(dayId);
