@@ -47,6 +47,11 @@ public class Controller {
     Button historyHomeButton;
     Button settingsButton;
     Button settingsHomeButton;
+    TextView editHistoryBreakfastInput;
+    TextView editHistoryLunchInput;
+    TextView editHistoryDinnerInput;
+    TextView editHistoryOtherInput;
+    Button editHistorySubmitButton;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
     private AppDatabase db;
@@ -515,6 +520,40 @@ public class Controller {
         toast.show();
     }
     public void setupEditHistory(long dayId){
-
+        activity.setContentView(R.layout.edit_history);
+        editHistoryBreakfastInput = this.activity.findViewById(R.id.editHistoryBreakfastInput);
+        editHistoryLunchInput = this.activity.findViewById(R.id.editHistoryLunchInput);
+        editHistoryDinnerInput = this.activity.findViewById(R.id.editHistoryDinnerInput);
+        editHistoryOtherInput = this.activity.findViewById(R.id.editHistoryOtherInput);
+        editHistorySubmitButton = this.activity.findViewById(R.id.editHistorySubmitButton);
+        CountDownLatch latch = new CountDownLatch(1);
+        setEditHistoryInputTexts(dayId, latch);
+        try{
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
+    }
+    private void setEditHistoryInputTexts(long dayId, CountDownLatch latch){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Integer breakfastPoints = db.dayDao().getBreakfastPoints(dayId);
+            Integer lunchPoints = db.dayDao().getLunchPoints(dayId);
+            Integer dinnerPoints = db.dayDao().getDinnerPoints(dayId);
+            Integer otherPoints = db.dayDao().getOtherPoints(dayId);
+            if(breakfastPoints != null){
+                editHistoryBreakfastInput.setText(String.valueOf(breakfastPoints));
+            }
+            if(lunchPoints != null){
+                editHistoryLunchInput.setText(String.valueOf(lunchPoints));
+            }
+            if(dinnerPoints != null){
+                editHistoryDinnerInput.setText(String.valueOf(dinnerPoints));
+            }
+            if(otherPoints != null){
+                editHistoryOtherInput.setText(String.valueOf(otherPoints));
+            }
+            latch.countDown();
+        });
     }
 }
