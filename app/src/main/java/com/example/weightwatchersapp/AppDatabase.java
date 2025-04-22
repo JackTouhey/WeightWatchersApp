@@ -10,12 +10,12 @@ import androidx.room.TypeConverters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Day.class, Week.class}, version = 7)
+@Database(entities = {Day.class, Week.class}, version = 8)
 @TypeConverters({JSONConverter.class, weekJSONConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract DayDao dayDao();
     public abstract WeekDao weekDao();
-    private static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(4);
+    private static final ExecutorService databaseExecutor = Executors.newFixedThreadPool(12);
     public static ExecutorService getDatabaseExecutor() {
         return databaseExecutor;
     }
