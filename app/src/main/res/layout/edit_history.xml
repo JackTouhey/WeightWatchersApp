@@ -1,6 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+    <TextView
+        android:id="@+id/editHistoryBreakfastLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/breakfast_points"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editHistoryBreakfastInput"
+        android:layout_width="213dp"
+        android:layout_height="47dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="4dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/not_set"
+        app:layout_constraintBottom_toBottomOf="@+id/editHistoryBreakfastLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editHistoryBreakfastLabel"
+        app:layout_constraintTop_toTopOf="@+id/editHistoryBreakfastLabel" />
+
+    <TextView
+        android:id="@+id/editHistoryLunchLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lunch_points"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editHistoryLunchInput"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryBreakfastLabel"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryBreakfastLabel"
+        app:layout_constraintTop_toTopOf="@+id/editHistoryLunchInput" />
+
+    <TextView
+        android:id="@+id/editHistoryDinnerLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dinner_points"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editHistoryDinnerInput"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryLunchLabel"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryLunchLabel"
+        app:layout_constraintTop_toTopOf="@+id/editHistoryDinnerInput" />
+
+    <TextView
+        android:id="@+id/editHistoryOtherLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/other_points"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editHistoryOtherInput"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryDinnerLabel"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryDinnerLabel"
+        app:layout_constraintTop_toTopOf="@+id/editHistoryOtherInput" />
+
+    <EditText
+        android:id="@+id/editHistoryLunchInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="3dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/not_set"
+        app:layout_constraintBottom_toTopOf="@+id/editHistoryDinnerInput"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryBreakfastInput"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryBreakfastInput"
+        app:layout_constraintTop_toBottomOf="@+id/editHistoryBreakfastInput"
+        app:layout_constraintVertical_bias="0.557" />
+
+    <EditText
+        android:id="@+id/editHistoryDinnerInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/not_set"
+        app:layout_constraintBottom_toTopOf="@+id/editHistoryOtherInput"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryLunchInput"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryLunchInput" />
+
+    <EditText
+        android:id="@+id/editHistoryOtherInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/not_set"
+        app:layout_constraintBottom_toTopOf="@+id/editHistorySubmitButton"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryDinnerInput"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryDinnerInput" />
+
+    <Button
+        android:id="@+id/editHistorySubmitButton"
+        android:layout_width="152dp"
+        android:layout_height="62dp"
+        android:layout_marginBottom="332dp"
+        android:text="@string/submit_changes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editHistoryOtherInput"
+        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintStart_toStartOf="@+id/editHistoryOtherInput" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,4 +29,5 @@
     <string name="change_daily_points">Change Daily Points:</string>
     <string name="change_weekly_points">Change Weekly Points:</string>
     <string name="edit">Edit</string>
+    <string name="submit_changes">Submit Changes</string>
 </resources>
