@@ -526,6 +526,7 @@ public class Controller {
         editHistoryDinnerInput = this.activity.findViewById(R.id.editHistoryDinnerInput);
         editHistoryOtherInput = this.activity.findViewById(R.id.editHistoryOtherInput);
         editHistorySubmitButton = this.activity.findViewById(R.id.editHistorySubmitButton);
+        setEditHistoryButtons(dayId);
         CountDownLatch latch = new CountDownLatch(1);
         setEditHistoryInputTexts(dayId, latch);
         try{
@@ -535,7 +536,7 @@ public class Controller {
             Thread.currentThread().interrupt();
         }
     }
-    private void setEditHistoryInputListeners(){
+    private void setEditHistoryButtons(long dayId){
         editHistoryBreakfastInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -568,6 +569,44 @@ public class Controller {
                 }
             }
         });
+        editHistorySubmitButton.setOnClickListener(e->{
+            submitEditHistory(dayId);
+        });
+    }
+    private void submitEditHistory(long dayId){
+        CountDownLatch latch = new CountDownLatch(1);
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Day day = db.dayDao().getDayById(dayId);
+            try{
+                String breakfastText = editHistoryBreakfastInput.getText().toString();
+                String lunchText = editHistoryLunchInput.getText().toString();
+                String dinnerText = editHistoryDinnerInput.getText().toString();
+                String otherText = editHistoryOtherInput.getText().toString();
+                if(!breakfastText.equals("Not entered")){
+                    day.setBreakfastPoints(Integer.parseInt(breakfastText));
+                }
+                if(!lunchText.equals("Not entered")){
+                    day.setLunchPoints(Integer.parseInt(lunchText));
+                }
+                if(!dinnerText.equals("Not entered")){
+                    day.setDinnerPoints(Integer.parseInt(dinnerText));
+                }
+                if(!otherText.equals("Not entered")){
+                    day.setOtherPoints(Integer.parseInt(otherText));
+                }
+            } catch (NumberFormatException e){
+                Log.d("DEBUG", "NFE: " + e);
+            }
+            db.dayDao().update(day);
+            latch.countDown();
+        });
+        try{
+            latch.await();
+            setupHistoryPage();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
     }
     private void setEditHistoryInputTexts(long dayId, CountDownLatch latch){
         AppDatabase.getDatabaseExecutor().execute(()->{
