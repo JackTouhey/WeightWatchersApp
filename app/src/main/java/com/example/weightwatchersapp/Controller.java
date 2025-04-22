@@ -575,8 +575,10 @@ public class Controller {
     }
     private void submitEditHistory(long dayId){
         CountDownLatch latch = new CountDownLatch(1);
+        Log.d("DEBUG", "Submit edit history dayId: " + dayId);
         AppDatabase.getDatabaseExecutor().execute(()->{
             Day day = db.dayDao().getDayById(dayId);
+            Week week = db.weekDao().getWeekById(day.getWeekId());
             try{
                 String breakfastText = editHistoryBreakfastInput.getText().toString();
                 String lunchText = editHistoryLunchInput.getText().toString();
@@ -598,6 +600,16 @@ public class Controller {
                 Log.d("DEBUG", "NFE: " + e);
             }
             db.dayDao().update(day);
+            CountDownLatch innerLatch = new CountDownLatch(1);
+            if(dayId > 1){
+                updateWeeklyPoints(dayId, week.getWId(), innerLatch);
+            }
+            try{
+                innerLatch.await();
+            } catch (InterruptedException e) {
+                Log.e("DayFragment", "Waiting interrupted", e);
+                Thread.currentThread().interrupt();
+            }
             latch.countDown();
         });
         try{
@@ -607,6 +619,81 @@ public class Controller {
             Log.e("DayFragment", "Waiting interrupted", e);
             Thread.currentThread().interrupt();
         }
+    }
+    private void updateWeeklyPoints(long dayId, long weekId, CountDownLatch latch){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Day day = db.dayDao().getDayById(dayId);
+            Week week = db.weekDao().getWeekById(weekId);
+            int dayPointDifference = day.getRemainingPoints();
+            int previousWP;
+            switch (day.getName()){
+                case "Monday":
+                    previousWP = db.weekDao().getSundayWPFromWeekId(weekId - 1);
+                    if(dayPointDifference >= 4){
+                        week.setMondayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setMondayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+                case "Tuesday":
+                    previousWP = week.getMondayWP();
+                    if(dayPointDifference >= 4){
+                        week.setTuesdayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setTuesdayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+                case "Wednesday":
+                    previousWP = week.getTuesdayWP();
+                    if(dayPointDifference >= 4){
+                        week.setWednesdayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setWednesdayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+                case "Thursday":
+                    previousWP = week.getWednesdayWP();
+                    if(dayPointDifference >= 4){
+                        week.setThursdayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setThursdayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+                case "Friday":
+                    previousWP = week.getThursdayWP();
+                    if(dayPointDifference >= 4){
+                        week.setFridayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setFridayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+                case "Saturday":
+                    previousWP = week.getFridayWP();
+                    if(dayPointDifference >= 4){
+                        week.setSaturdayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setSaturdayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+                case "Sunday":
+                    previousWP = week.getSaturdayWP();
+                    if(dayPointDifference >= 4){
+                        week.setSundayWP(previousWP + 4);
+                    }
+                    else{
+                        week.setSundayWP(previousWP + dayPointDifference);
+                    }
+                    break;
+            }
+            db.weekDao().update(week);
+            latch.countDown();
+        });
     }
     private void setEditHistoryInputTexts(long dayId, CountDownLatch latch){
         AppDatabase.getDatabaseExecutor().execute(()->{
