@@ -31,4 +31,5 @@
     <string name="edit">Edit</string>
     <string name="submit_changes">Submit Changes</string>
     <string name="quick_add_placeholder">Quick Add</string>
+    <string name="change_name">Name:</string>
 </resources>

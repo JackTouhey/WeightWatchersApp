@@ -511,12 +511,14 @@ public class Controller {
     }
     private void changeDailyPoints(Integer newDailyPoints){
         this.currentDailyPoints = newDailyPoints;
-        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints + ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints +
+                ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
         toast.show();
     }
     private void changeWeeklyPoints(Integer newWeeklyPoints){
         this.weeklyPointStart = newWeeklyPoints;
-        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart +
+                ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
         toast.show();
     }
     public void setupEditHistory(long dayId){
