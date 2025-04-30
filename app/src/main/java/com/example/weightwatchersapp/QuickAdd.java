@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "quickAdd")
+@Entity(tableName = "QuickAdd")
 public class QuickAdd {
     @PrimaryKey(autoGenerate = true)
     private long quickAddID;
