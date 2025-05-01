@@ -786,6 +786,41 @@ public class Controller {
         editQuickAddOtherPoints = this.activity.findViewById(R.id.otherPointInput);
         submitEditQuickAdd = this.activity.findViewById(R.id.submitChangesButton);
         editQuickAddHome = this.activity.findViewById(R.id.editQuickAddHomeButton);
+        submitEditQuickAdd.setOnClickListener(e->{
+            submitEditQuickAdd(quickAddID);
+        });
+        editQuickAddHome.setOnClickListener(e->{
+            setupHomePage();
+        });
 
+    }
+    private void submitEditQuickAdd(long quickAddID){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            QuickAdd currentQuickAdd = db.quickAddDao().getQuickAddById(quickAddID);
+            try{
+                if(doesEditTextHaveContents(editQuickAddName)){
+                    currentQuickAdd.setName(editQuickAddName.getText().toString());
+                }
+                if(doesEditTextHaveContents(editQuickAddBreakfastPoints)){
+                    currentQuickAdd.setBreakfastPoints(Integer.parseInt(editQuickAddBreakfastPoints.getText().toString()));
+                }
+                if(doesEditTextHaveContents(editQuickAddLunchPoints)){
+                    currentQuickAdd.setLunchPoints(Integer.parseInt(editQuickAddLunchPoints.getText().toString()));
+                }
+                if(doesEditTextHaveContents(editQuickAddDinnerPoints)){
+                    currentQuickAdd.setDinnerPoints(Integer.parseInt(editQuickAddDinnerPoints.getText().toString()));
+                }
+                if(doesEditTextHaveContents(editQuickAddOtherPoints)){
+                    currentQuickAdd.setOtherPoints(Integer.parseInt(editQuickAddOtherPoints.getText().toString()));
+                }
+                db.quickAddDao().update(currentQuickAdd);
+            } catch (Exception e) {
+                Log.d("EXCEPTION", "submitEditQuickAdd Exception: " + e);
+            }
+            setupHomePage();
+        });
+    }
+    private boolean doesEditTextHaveContents(EditText editText){
+        return !editText.getText().toString().isEmpty();
     }
 }
