@@ -19,6 +19,9 @@ public class QuickAdd {
     @ColumnInfo(name = "other_points")
     private Integer otherPoints;
 
+    public QuickAdd(){
+
+    }
     public void setQuickAddID(long quickAddID){this.quickAddID = quickAddID;}
     public long getQuickAddID(){return this.quickAddID;}
     public void setName(String name){this.name = name;}

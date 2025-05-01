@@ -25,7 +25,6 @@ public class Controller {
     private long currentWeekId;
     private int weeklyPointStart = 40;
     private int currentDailyPoints = 28;
-    private ArrayList<Day> history = new ArrayList<>();
     private int currentPage;
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
@@ -52,9 +51,22 @@ public class Controller {
     TextView editHistoryDinnerInput;
     TextView editHistoryOtherInput;
     Button editHistorySubmitButton;
+    Button quickAddButtonOne;
+    Button quickAddOneSettings;
+    Button quickAddButtonTwo;
+    Button quickAddTwoSettings;
+    Button quickAddButtonThree;
+    Button quickAddThreeSettings;
+    EditText editQuickAddName;
+    EditText editQuickAddBreakfastPoints;
+    EditText editQuickAddLunchPoints;
+    EditText editQuickAddDinnerPoints;
+    EditText editQuickAddOtherPoints;
+    Button submitEditQuickAdd;
+    Button editQuickAddHome;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
-    private AppDatabase db;
+    private final AppDatabase db;
     private HistoryAdapter adapter;
     String[] beerInsults = new String[]{
             "Whoa there big man",
@@ -80,6 +92,7 @@ public class Controller {
         this.activity = activity;
         this.db = AppDatabase.getDatabase(this.activity);
         this.currentPage = currentPage;
+        setupQuickAddObjects();
         if (!AppDatabase.getDatabaseExecutor().isShutdown()) {
             AppDatabase.getDatabaseExecutor().execute(() -> {
                 try {
@@ -112,6 +125,25 @@ public class Controller {
                 }
             });
         }
+    }
+    private void setupQuickAddObjects(){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            QuickAdd quickAddOne = db.quickAddDao().getQuickAddById(1);
+            QuickAdd quickAddTwo = db.quickAddDao().getQuickAddById(2);
+            QuickAdd quickAddThree = db.quickAddDao().getQuickAddById(3);
+            if (quickAddOne == null){
+                quickAddOne = new QuickAdd();
+                db.quickAddDao().insert(quickAddOne);
+            }
+            if (quickAddTwo == null){
+                quickAddTwo = new QuickAdd();
+                db.quickAddDao().insert(quickAddTwo);
+            }
+            if (quickAddThree == null){
+                quickAddThree = new QuickAdd();
+                db.quickAddDao().insert(quickAddThree);
+            }
+        });
     }
     private void completeDay(CountDownLatch outerLatch) {
         AppDatabase.getDatabaseExecutor().execute(() -> {
@@ -201,6 +233,12 @@ public class Controller {
         currentDayDisplay = this.activity.findViewById(R.id.currentDayDisplay);
         dailyRemainingPointsDisplay = this.activity.findViewById(R.id.remainingDailyPointsDisplay);
         weeklyRemainingPointsDisplay = this.activity.findViewById(R.id.remainingWeeklyPointsDisplay);
+        quickAddButtonOne = this.activity.findViewById(R.id.quickAddButtonOne);
+        quickAddOneSettings = this.activity.findViewById(R.id.quickAddOneSettings);
+        quickAddButtonTwo = this.activity.findViewById(R.id.quickAddButtonTwo);
+        quickAddTwoSettings = this.activity.findViewById(R.id.quickAddTwoSettings);
+        quickAddButtonThree = this.activity.findViewById(R.id.quickAddButtonThree);
+        quickAddThreeSettings = this.activity.findViewById(R.id.quickAddThreeSettings);
 
         updateDisplayValues();
         setupDayViewButtons();
@@ -738,5 +776,16 @@ public class Controller {
             }
             latch.countDown();
         });
+    }
+    private void setupEditQuickAddPage(long quickAddID){
+        activity.setContentView(R.layout.edit_quick_add);
+        editQuickAddName = this.activity.findViewById(R.id.editNameInput);
+        editQuickAddBreakfastPoints = this.activity.findViewById(R.id.breakfastPointInput);
+        editQuickAddLunchPoints = this.activity.findViewById(R.id.lunchPointInput);
+        editQuickAddDinnerPoints = this.activity.findViewById(R.id.dinnerPointInput);
+        editQuickAddOtherPoints = this.activity.findViewById(R.id.otherPointInput);
+        submitEditQuickAdd = this.activity.findViewById(R.id.submitChangesButton);
+        editQuickAddHome = this.activity.findViewById(R.id.editQuickAddHomeButton);
+
     }
 }

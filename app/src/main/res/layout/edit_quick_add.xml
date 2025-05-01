@@ -132,7 +132,7 @@
         app:layout_constraintTop_toBottomOf="@+id/otherPointInput" />
 
     <Button
-        android:id="@+id/homeButton"
+        android:id="@+id/editQuickAddHomeButton"
         android:layout_width="367dp"
         android:layout_height="52dp"
         android:layout_marginBottom="28dp"
