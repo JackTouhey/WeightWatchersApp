@@ -130,13 +130,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:ems="10"
+        android:importantForAutofill="no"
         android:inputType="number"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/dinnerPointDisplay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/lunchPointInput"
-        app:layout_constraintTop_toTopOf="@+id/dinnerPointDisplay"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="@+id/dinnerPointDisplay" />
 
     <TextView
         android:id="@+id/otherPointTextView"
@@ -164,13 +164,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:ems="10"
+        android:importantForAutofill="no"
         android:inputType="numberSigned"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/otherPointDisplay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/dinnerPointInput"
-        app:layout_constraintTop_toTopOf="@+id/otherPointDisplay"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toTopOf="@+id/otherPointDisplay" />
 
     <!-- Remaining Points Section -->
 
@@ -283,4 +283,69 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addBeerButton" />
 
+    <Button
+        android:id="@+id/quickAddButtonOne"
+        android:layout_width="232dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/quick_add_placeholder"
+        app:layout_constraintEnd_toEndOf="@+id/addBeerButton"
+        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addBeerButton" />
+
+    <Button
+        android:id="@+id/quickAddOneSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        app:layout_constraintBottom_toBottomOf="@+id/quickAddButtonOne"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.407"
+        app:layout_constraintStart_toEndOf="@+id/quickAddButtonOne"
+        app:layout_constraintTop_toTopOf="@+id/quickAddButtonOne" />
+
+    <Button
+        android:id="@+id/quickAddButtonTwo"
+        android:layout_width="232dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="55dp"
+        android:text="@string/quick_add_placeholder"
+        app:layout_constraintEnd_toEndOf="@+id/addBeerButton"
+        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addBeerButton" />
+
+    <Button
+        android:id="@+id/quickAddTwoSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        app:layout_constraintBottom_toBottomOf="@+id/quickAddButtonTwo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.407"
+        app:layout_constraintStart_toEndOf="@+id/quickAddButtonTwo"
+        app:layout_constraintTop_toTopOf="@+id/quickAddButtonTwo" />
+
+    <Button
+        android:id="@+id/quickAddButtonThree"
+        android:layout_width="232dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="102dp"
+        android:text="@string/quick_add_placeholder"
+        app:layout_constraintEnd_toEndOf="@+id/addBeerButton"
+        app:layout_constraintHorizontal_bias="0.217"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addBeerButton" />
+
+    <Button
+        android:id="@+id/quickAddThreeSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        app:layout_constraintBottom_toBottomOf="@+id/quickAddButtonThree"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.407"
+        app:layout_constraintStart_toEndOf="@+id/quickAddButtonThree"
+        app:layout_constraintTop_toTopOf="@+id/quickAddButtonThree" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,6 @@ public class Controller {
     private long currentWeekId;
     private int weeklyPointStart = 40;
     private int currentDailyPoints = 28;
-    private ArrayList<Day> history = new ArrayList<>();
     private int currentPage;
     TextView breakfastPointsDisplay;
     TextView lunchPointsDisplay;
@@ -52,9 +51,22 @@ public class Controller {
     TextView editHistoryDinnerInput;
     TextView editHistoryOtherInput;
     Button editHistorySubmitButton;
+    Button quickAddButtonOne;
+    Button quickAddOneSettings;
+    Button quickAddButtonTwo;
+    Button quickAddTwoSettings;
+    Button quickAddButtonThree;
+    Button quickAddThreeSettings;
+    EditText editQuickAddName;
+    EditText editQuickAddBreakfastPoints;
+    EditText editQuickAddLunchPoints;
+    EditText editQuickAddDinnerPoints;
+    EditText editQuickAddOtherPoints;
+    Button submitEditQuickAdd;
+    Button editQuickAddHome;
     RecyclerView historyRecyclerView;
     private final String notEntered = "Not Entered";
-    private AppDatabase db;
+    private final AppDatabase db;
     private HistoryAdapter adapter;
     String[] beerInsults = new String[]{
             "Whoa there big man",
@@ -201,9 +213,52 @@ public class Controller {
         currentDayDisplay = this.activity.findViewById(R.id.currentDayDisplay);
         dailyRemainingPointsDisplay = this.activity.findViewById(R.id.remainingDailyPointsDisplay);
         weeklyRemainingPointsDisplay = this.activity.findViewById(R.id.remainingWeeklyPointsDisplay);
-
+        quickAddButtonOne = this.activity.findViewById(R.id.quickAddButtonOne);
+        quickAddOneSettings = this.activity.findViewById(R.id.quickAddOneSettings);
+        quickAddButtonTwo = this.activity.findViewById(R.id.quickAddButtonTwo);
+        quickAddTwoSettings = this.activity.findViewById(R.id.quickAddTwoSettings);
+        quickAddButtonThree = this.activity.findViewById(R.id.quickAddButtonThree);
+        quickAddThreeSettings = this.activity.findViewById(R.id.quickAddThreeSettings);
+        setupQuickAddObjects();
         updateDisplayValues();
         setupDayViewButtons();
+    }
+    private void setupQuickAddObjects(){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            QuickAdd quickAddOne = db.quickAddDao().getQuickAddById(1);
+            QuickAdd quickAddTwo = db.quickAddDao().getQuickAddById(2);
+            QuickAdd quickAddThree = db.quickAddDao().getQuickAddById(3);
+            if (quickAddOne == null){
+                quickAddOne = new QuickAdd();
+                db.quickAddDao().insert(quickAddOne);
+            }
+            else{
+                if(quickAddOne.getName() != null){
+                    String addName = "Add " + quickAddOne.getName();
+                    quickAddButtonOne.setText(addName);
+                }
+            }
+            if (quickAddTwo == null){
+                quickAddTwo = new QuickAdd();
+                db.quickAddDao().insert(quickAddTwo);
+            }
+            else{
+                if(quickAddTwo.getName() != null){
+                    String addName = "Add " + quickAddTwo.getName();
+                    quickAddButtonTwo.setText(addName);
+                }
+            }
+            if (quickAddThree == null){
+                quickAddThree = new QuickAdd();
+                db.quickAddDao().insert(quickAddThree);
+            }
+            else{
+                if(quickAddThree.getName() != null){
+                    String addName = "Add " + quickAddThree.getName();
+                    quickAddButtonThree.setText(addName);
+                }
+            }
+        });
     }
     private void updateDisplayValues(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -302,6 +357,24 @@ public class Controller {
         });
         settingsButton.setOnClickListener(e ->{
             setupSettingsPage();
+        });
+        quickAddButtonOne.setOnClickListener(e->{
+            onQuickAddPress(1);
+        });
+        quickAddOneSettings.setOnClickListener(e->{
+            setupEditQuickAddPage(1);
+        });
+        quickAddButtonTwo.setOnClickListener(e->{
+            onQuickAddPress(2);
+        });
+        quickAddTwoSettings.setOnClickListener(e->{
+            setupEditQuickAddPage(2);
+        });
+        quickAddButtonThree.setOnClickListener(e->{
+            onQuickAddPress(3);
+        });
+        quickAddThreeSettings.setOnClickListener(e->{
+            setupEditQuickAddPage(3);
         });
     }
     private void addBreakfast(){
@@ -453,6 +526,26 @@ public class Controller {
             Log.d("POINTINPUTERROR", "NFE on setting day points: " + nfe);
         }
     }
+    private void onQuickAddPress(long quickAddID){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Day day = db.dayDao().getDayById(currentDayId);
+            QuickAdd currentQuickAdd = db.quickAddDao().getQuickAddById(quickAddID);
+            if(currentQuickAdd.getBreakfastPoints() != null){
+                day.setBreakfastPoints(currentQuickAdd.getBreakfastPoints());
+            }
+            if(currentQuickAdd.getLunchPoints() != null){
+                day.setLunchPoints(currentQuickAdd.getLunchPoints());
+            }
+            if(currentQuickAdd.getDinnerPoints() != null){
+                day.setDinnerPoints(currentQuickAdd.getDinnerPoints());
+            }
+            if(currentQuickAdd.getOtherPoints() != null){
+                day.addOtherPoints(currentQuickAdd.getOtherPoints());
+            }
+            db.dayDao().update(day);
+            updateDisplayValues();
+        });
+    }
     private void setupHistoryPage(){
         this.currentPage = 2;
         CountDownLatch latch = new CountDownLatch(1);
@@ -511,12 +604,14 @@ public class Controller {
     }
     private void changeDailyPoints(Integer newDailyPoints){
         this.currentDailyPoints = newDailyPoints;
-        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints + ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.activity, "Daily points set to " + currentDailyPoints +
+                ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
         toast.show();
     }
     private void changeWeeklyPoints(Integer newWeeklyPoints){
         this.weeklyPointStart = newWeeklyPoints;
-        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart + ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart +
+                ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
         toast.show();
     }
     public void setupEditHistory(long dayId){
@@ -736,5 +831,71 @@ public class Controller {
             }
             latch.countDown();
         });
+    }
+    private void setupEditQuickAddPage(long quickAddID){
+        activity.setContentView(R.layout.edit_quick_add);
+        editQuickAddName = this.activity.findViewById(R.id.editNameInput);
+        editQuickAddBreakfastPoints = this.activity.findViewById(R.id.breakfastPointInput);
+        editQuickAddLunchPoints = this.activity.findViewById(R.id.lunchPointInput);
+        editQuickAddDinnerPoints = this.activity.findViewById(R.id.dinnerPointInput);
+        editQuickAddOtherPoints = this.activity.findViewById(R.id.otherPointInput);
+        submitEditQuickAdd = this.activity.findViewById(R.id.submitChangesButton);
+        editQuickAddHome = this.activity.findViewById(R.id.editQuickAddHomeButton);
+        submitEditQuickAdd.setOnClickListener(e->{
+            submitEditQuickAdd(quickAddID);
+        });
+        editQuickAddHome.setOnClickListener(e->{
+            setupHomePage();
+        });
+
+    }
+    private void submitEditQuickAdd(long quickAddID){
+        CountDownLatch latch = new CountDownLatch(1);
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            QuickAdd currentQuickAdd = db.quickAddDao().getQuickAddById(quickAddID);
+            try{
+                if(doesEditTextHaveContents(editQuickAddName)){
+                    currentQuickAdd.setName(editQuickAddName.getText().toString());
+                }
+                if(doesEditTextHaveContents(editQuickAddBreakfastPoints)){
+                    currentQuickAdd.setBreakfastPoints(Integer.parseInt(editQuickAddBreakfastPoints.getText().toString()));
+                }
+                else{
+                    currentQuickAdd.removeBreakfastPoints();
+                }
+                if(doesEditTextHaveContents(editQuickAddLunchPoints)){
+                    currentQuickAdd.setLunchPoints(Integer.parseInt(editQuickAddLunchPoints.getText().toString()));
+                }
+                else{
+                    currentQuickAdd.removeLunchPoints();
+                }
+                if(doesEditTextHaveContents(editQuickAddDinnerPoints)){
+                    currentQuickAdd.setDinnerPoints(Integer.parseInt(editQuickAddDinnerPoints.getText().toString()));
+                }
+                else{
+                    currentQuickAdd.removeDinnerPoints();
+                }
+                if(doesEditTextHaveContents(editQuickAddOtherPoints)){
+                    currentQuickAdd.setOtherPoints(Integer.parseInt(editQuickAddOtherPoints.getText().toString()));
+                }
+                else{
+                    currentQuickAdd.removeOtherPoints();
+                }
+                db.quickAddDao().update(currentQuickAdd);
+            } catch (Exception e) {
+                Log.d("EXCEPTION", "submitEditQuickAdd Exception: " + e);
+            }
+            latch.countDown();
+        });
+        try{
+            latch.await();
+            setupHomePage();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
+    }
+    private boolean doesEditTextHaveContents(EditText editText){
+        return !editText.getText().toString().isEmpty();
     }
 }

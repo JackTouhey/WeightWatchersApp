@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/editNameInput"
+        android:layout_width="223dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@+id/editNameDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editNameDisplay" />
+
+    <EditText
+        android:id="@+id/breakfastPointInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/breakfastPointsDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/breakfastPointsDisplay" />
+
+    <EditText
+        android:id="@+id/lunchPointInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        app:layout_constraintBottom_toBottomOf="@+id/lunchPointsDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lunchPointsDisplay" />
+
+    <EditText
+        android:id="@+id/dinnerPointInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        app:layout_constraintBottom_toBottomOf="@+id/dinnerPointsDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dinnerPointsDisplay"
+        app:layout_constraintVertical_bias="0.444" />
+
+    <EditText
+        android:id="@+id/otherPointInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        app:layout_constraintBottom_toBottomOf="@+id/otherPointsDisplay"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/otherPointsDisplay"
+        app:layout_constraintVertical_bias="0.555" />
+
+    <TextView
+        android:id="@+id/editNameDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="52dp"
+        android:text="@string/change_name"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/breakfastPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="28dp"
+        android:text="@string/breakfast_points"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/editNameDisplay"
+        app:layout_constraintTop_toBottomOf="@+id/editNameDisplay" />
+
+    <TextView
+        android:id="@+id/lunchPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/lunch_points"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/breakfastPointsDisplay"
+        app:layout_constraintStart_toStartOf="@+id/breakfastPointsDisplay"
+        app:layout_constraintTop_toBottomOf="@+id/breakfastPointsDisplay" />
+
+    <TextView
+        android:id="@+id/dinnerPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/dinner_points"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/lunchPointsDisplay"
+        app:layout_constraintHorizontal_bias="0.75"
+        app:layout_constraintStart_toStartOf="@+id/lunchPointsDisplay"
+        app:layout_constraintTop_toBottomOf="@+id/lunchPointsDisplay" />
+
+    <TextView
+        android:id="@+id/otherPointsDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="@string/other_points"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/dinnerPointsDisplay"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="@+id/dinnerPointsDisplay"
+        app:layout_constraintTop_toBottomOf="@+id/dinnerPointsDisplay" />
+
+    <Button
+        android:id="@+id/submitChangesButton"
+        android:layout_width="209dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/submit_changes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/otherPointInput" />
+
+    <Button
+        android:id="@+id/editQuickAddHomeButton"
+        android:layout_width="367dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="28dp"
+        android:text="@string/home"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/submitChangesButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/editNameDisplay" />
+</androidx.constraintlayout.widget.ConstraintLayout>
