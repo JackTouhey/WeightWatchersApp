@@ -591,8 +591,7 @@ public class Controller {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
                     Integer newWeeklyPoints = Integer.parseInt(changeWeeklyPointsInput.getText().toString());
-                    changeWeeklyPoints(newWeeklyPoints);
-                    changeWeeklyPointsInput.setText("");
+                    onChangeWeeklyPointsClick(newWeeklyPoints);
                     return true;
                 }
                 return false;
@@ -608,11 +607,27 @@ public class Controller {
                 ". Please note this will not take effect until the next day", Toast.LENGTH_SHORT);
         toast.show();
     }
-    private void changeWeeklyPoints(Integer newWeeklyPoints){
-        this.weeklyPointStart = newWeeklyPoints;
-        Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart +
-                ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
-        toast.show();
+    private void changeWeeklyPoints(Integer newWeeklyPoints, CountDownLatch latch){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Week week = db.weekDao().getWeekById(currentWeekId);
+            week.updateWeeklyPoints(newWeeklyPoints, currentDayId);
+            db.weekDao().update(week);
+            Toast toast = Toast.makeText(this.activity, "Weekly points set to " + weeklyPointStart +
+                    ". Please note this will not take effect until the next week", Toast.LENGTH_SHORT);
+            toast.show();
+            latch.countDown();
+        });
+    }
+    private void onChangeWeeklyPointsClick(Integer newWeeklyPoints){
+        CountDownLatch latch = new CountDownLatch(1);
+        changeWeeklyPoints(newWeeklyPoints, latch);
+        changeWeeklyPointsInput.setText("");
+        try{
+            latch.await();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
     }
     public void setupEditHistory(long dayId){
         activity.setContentView(R.layout.edit_history);

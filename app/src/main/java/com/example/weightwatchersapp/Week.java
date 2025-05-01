@@ -65,5 +65,28 @@ public class Week {
     public int getWeeklyPoints(){
         return this.weeklyPoints;
     }
-
+    public void updateWeeklyPoints(Integer newWeeklyPoints, long currentDayId){
+        int pointDifference = this.weeklyPoints - newWeeklyPoints;
+        if (currentDayId >= this.getMondayId()){
+            this.setMondayWP(this.getMondayWP() + pointDifference);
+        }
+        if (currentDayId >= this.getTuesdayId()){
+            this.setTuesdayWP(this.getTuesdayWP() + pointDifference);
+        }
+        if (currentDayId >= this.getWednesdayId()){
+            this.setWednesdayWP(this.getWednesdayWP() + pointDifference);
+        }
+        if (currentDayId >= this.getThursdayId()){
+            this.setThursdayWP(this.getThursdayWP() + pointDifference);
+        }
+        if (currentDayId >= this.getFridayId()){
+            this.setFridayWP(this.getFridayWP() + pointDifference);
+        }
+        if (currentDayId >= this.getSaturdayId()){
+            this.setSaturdayWP(this.getSaturdayWP() + pointDifference);
+        }
+        if (currentDayId >= this.getSundayWP()){
+            this.setSundayWP(this.getSundayWP() + pointDifference);
+        }
+    }
 }
