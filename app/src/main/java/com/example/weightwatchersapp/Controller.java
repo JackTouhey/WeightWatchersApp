@@ -341,6 +341,24 @@ public class Controller {
         settingsButton.setOnClickListener(e ->{
             setupSettingsPage();
         });
+        quickAddButtonOne.setOnClickListener(e->{
+            onQuickAddPress(1);
+        });
+        quickAddOneSettings.setOnClickListener(e->{
+            setupEditQuickAddPage(1);
+        });
+        quickAddButtonTwo.setOnClickListener(e->{
+            onQuickAddPress(2);
+        });
+        quickAddTwoSettings.setOnClickListener(e->{
+            setupEditQuickAddPage(2);
+        });
+        quickAddButtonThree.setOnClickListener(e->{
+            onQuickAddPress(3);
+        });
+        quickAddThreeSettings.setOnClickListener(e->{
+            setupEditQuickAddPage(3);
+        });
     }
     private void addBreakfast(){
         try{
@@ -490,6 +508,26 @@ public class Controller {
         } catch (NumberFormatException nfe) {
             Log.d("POINTINPUTERROR", "NFE on setting day points: " + nfe);
         }
+    }
+    private void onQuickAddPress(long quickAddID){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            Day day = db.dayDao().getDayById(currentDayId);
+            QuickAdd currentQuickAdd = db.quickAddDao().getQuickAddById(quickAddID);
+            if(currentQuickAdd.getBreakfastPoints() != null){
+                day.setBreakfastPoints(currentQuickAdd.getBreakfastPoints());
+            }
+            if(currentQuickAdd.getLunchPoints() != null){
+                day.setLunchPoints(currentQuickAdd.getLunchPoints());
+            }
+            if(currentQuickAdd.getDinnerPoints() != null){
+                day.setDinnerPoints(currentQuickAdd.getDinnerPoints());
+            }
+            if(currentQuickAdd.getOtherPoints() != null){
+                day.addOtherPoints(currentQuickAdd.getOtherPoints());
+            }
+            db.dayDao().update(day);
+            updateDisplayValues();
+        });
     }
     private void setupHistoryPage(){
         this.currentPage = 2;
@@ -795,6 +833,7 @@ public class Controller {
 
     }
     private void submitEditQuickAdd(long quickAddID){
+        CountDownLatch latch = new CountDownLatch(1);
         AppDatabase.getDatabaseExecutor().execute(()->{
             QuickAdd currentQuickAdd = db.quickAddDao().getQuickAddById(quickAddID);
             try{
@@ -817,8 +856,15 @@ public class Controller {
             } catch (Exception e) {
                 Log.d("EXCEPTION", "submitEditQuickAdd Exception: " + e);
             }
-            setupHomePage();
+            latch.countDown();
         });
+        try{
+            latch.await();
+            setupHomePage();
+        } catch (InterruptedException e) {
+            Log.e("DayFragment", "Waiting interrupted", e);
+            Thread.currentThread().interrupt();
+        }
     }
     private boolean doesEditTextHaveContents(EditText editText){
         return !editText.getText().toString().isEmpty();
