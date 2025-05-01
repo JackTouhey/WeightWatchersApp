@@ -42,4 +42,8 @@ public class QuickAdd {
     }
     public void setOtherPoints(Integer otherPoints){this.otherPoints = otherPoints;}
     public Integer getOtherPoints(){return this.otherPoints;}
+    public void removeBreakfastPoints(){this.breakfastPoints = null;}
+    public void removeLunchPoints(){this.lunchPoints = null;}
+    public void removeDinnerPoints(){this.dinnerPoints = null;}
+    public void removeOtherPoints(){this.otherPoints = null;}
 }

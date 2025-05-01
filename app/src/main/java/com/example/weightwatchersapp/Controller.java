@@ -92,7 +92,6 @@ public class Controller {
         this.activity = activity;
         this.db = AppDatabase.getDatabase(this.activity);
         this.currentPage = currentPage;
-        setupQuickAddObjects();
         if (!AppDatabase.getDatabaseExecutor().isShutdown()) {
             AppDatabase.getDatabaseExecutor().execute(() -> {
                 try {
@@ -125,25 +124,6 @@ public class Controller {
                 }
             });
         }
-    }
-    private void setupQuickAddObjects(){
-        AppDatabase.getDatabaseExecutor().execute(()->{
-            QuickAdd quickAddOne = db.quickAddDao().getQuickAddById(1);
-            QuickAdd quickAddTwo = db.quickAddDao().getQuickAddById(2);
-            QuickAdd quickAddThree = db.quickAddDao().getQuickAddById(3);
-            if (quickAddOne == null){
-                quickAddOne = new QuickAdd();
-                db.quickAddDao().insert(quickAddOne);
-            }
-            if (quickAddTwo == null){
-                quickAddTwo = new QuickAdd();
-                db.quickAddDao().insert(quickAddTwo);
-            }
-            if (quickAddThree == null){
-                quickAddThree = new QuickAdd();
-                db.quickAddDao().insert(quickAddThree);
-            }
-        });
     }
     private void completeDay(CountDownLatch outerLatch) {
         AppDatabase.getDatabaseExecutor().execute(() -> {
@@ -239,9 +219,46 @@ public class Controller {
         quickAddTwoSettings = this.activity.findViewById(R.id.quickAddTwoSettings);
         quickAddButtonThree = this.activity.findViewById(R.id.quickAddButtonThree);
         quickAddThreeSettings = this.activity.findViewById(R.id.quickAddThreeSettings);
-
+        setupQuickAddObjects();
         updateDisplayValues();
         setupDayViewButtons();
+    }
+    private void setupQuickAddObjects(){
+        AppDatabase.getDatabaseExecutor().execute(()->{
+            QuickAdd quickAddOne = db.quickAddDao().getQuickAddById(1);
+            QuickAdd quickAddTwo = db.quickAddDao().getQuickAddById(2);
+            QuickAdd quickAddThree = db.quickAddDao().getQuickAddById(3);
+            if (quickAddOne == null){
+                quickAddOne = new QuickAdd();
+                db.quickAddDao().insert(quickAddOne);
+            }
+            else{
+                if(quickAddOne.getName() != null){
+                    String addName = "Add " + quickAddOne.getName();
+                    quickAddButtonOne.setText(addName);
+                }
+            }
+            if (quickAddTwo == null){
+                quickAddTwo = new QuickAdd();
+                db.quickAddDao().insert(quickAddTwo);
+            }
+            else{
+                if(quickAddTwo.getName() != null){
+                    String addName = "Add " + quickAddTwo.getName();
+                    quickAddButtonTwo.setText(addName);
+                }
+            }
+            if (quickAddThree == null){
+                quickAddThree = new QuickAdd();
+                db.quickAddDao().insert(quickAddThree);
+            }
+            else{
+                if(quickAddThree.getName() != null){
+                    String addName = "Add " + quickAddThree.getName();
+                    quickAddButtonThree.setText(addName);
+                }
+            }
+        });
     }
     private void updateDisplayValues(){
         AppDatabase.getDatabaseExecutor().execute(() ->{
@@ -843,14 +860,26 @@ public class Controller {
                 if(doesEditTextHaveContents(editQuickAddBreakfastPoints)){
                     currentQuickAdd.setBreakfastPoints(Integer.parseInt(editQuickAddBreakfastPoints.getText().toString()));
                 }
+                else{
+                    currentQuickAdd.removeBreakfastPoints();
+                }
                 if(doesEditTextHaveContents(editQuickAddLunchPoints)){
                     currentQuickAdd.setLunchPoints(Integer.parseInt(editQuickAddLunchPoints.getText().toString()));
+                }
+                else{
+                    currentQuickAdd.removeLunchPoints();
                 }
                 if(doesEditTextHaveContents(editQuickAddDinnerPoints)){
                     currentQuickAdd.setDinnerPoints(Integer.parseInt(editQuickAddDinnerPoints.getText().toString()));
                 }
+                else{
+                    currentQuickAdd.removeDinnerPoints();
+                }
                 if(doesEditTextHaveContents(editQuickAddOtherPoints)){
                     currentQuickAdd.setOtherPoints(Integer.parseInt(editQuickAddOtherPoints.getText().toString()));
+                }
+                else{
+                    currentQuickAdd.removeOtherPoints();
                 }
                 db.quickAddDao().update(currentQuickAdd);
             } catch (Exception e) {
